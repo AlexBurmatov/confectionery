@@ -5,7 +5,8 @@ namespace IIS.АСУ_Кондитерская
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Web.Controls;
     using ICSSoft.STORMNET.Web.AjaxControls;
-    
+    using ICSSoft.STORMNET.Business;
+
     public partial class ЦехE : BaseEditForm<Цех>
     {
         /// <summary>
@@ -28,7 +29,7 @@ namespace IIS.АСУ_Кондитерская
         /// Вызывается самым первым в Page_Load.
         /// </summary>
         protected override void Preload()
-        {
+        {            
         }
 
         /// <summary>
@@ -36,6 +37,10 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PreApplyToControls()
         {
+            var ds = DataServiceProvider.DataService;
+            var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Цех), "ЦехE");
+            var objs = ds.LoadObjects(lcs);
+            this.DataObject = (Цех)objs[0];
         }
 
         /// <summary>

@@ -4,7 +4,7 @@ namespace IIS.АСУ_Кондитерская
     using System;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Web.Controls;
-
+    using NewPlatform.Flexberry.Security;
     using Resources;
 
     public partial class ТорговаяТочкаL : BaseListForm<ТорговаяТочка>
@@ -31,12 +31,21 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Preload()
         {
-            // определение принадлежности пользователя к роли
-            // если продавец, то редирект на его торговую точку
-            NewPlatform.Flexberry.Security.IUserManager manager =2 
-            manager.GetRolesOfUser(Context.Profile.UserName);
+            // в случае, если страницу пытается открыть Продавец, 
+            // то его перенаправляем на страницу с Торговой точкой, на которой он работает
+            
             var ds = DataServiceProvider.DataService;
             var s = ds.SecurityManager;
+            var manager = new NewPlatform.Flexberry.Security.UserManager(ds,new Md5PasswordHasher());
+            var roles = manager.GetRolesOfUser(Context.User.Identity.Name);
+            foreach(var role in roles)
+            {
+                if (role.Equals("Продавец"))
+                {
+                    Context.Response.Redirect("~/forms/TorgovayaTochka/TorgovayaTochkaE.aspx");
+                    break;
+                }
+            }
         }
 
         /// <summary>
