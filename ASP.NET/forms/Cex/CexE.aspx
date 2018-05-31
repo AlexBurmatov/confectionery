@@ -46,6 +46,14 @@
 
 
 </div>
+<div class="clearfix">
+  <asp:Label CssClass="descLbl" ID="ctrlКоличествоLabel" runat="server" Text="Количество" EnableViewState="False">
+</asp:Label>
+<ac:AlphaNumericTextBox CssClass="descTxt" ID="ctrlКоличество" Type="Numeric" runat="server">
+</ac:AlphaNumericTextBox>
+
+
+</div>
 <asp:ScriptManager ID="ScriptManager1" runat="server" >
 </asp:ScriptManager>
 

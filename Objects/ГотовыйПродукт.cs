@@ -55,7 +55,16 @@ namespace IIS.АСУ_Кондитерская
         private IIS.АСУ_Кондитерская.Цех fЦех;
         
         // *** Start programmer edit section *** (ГотовыйПродукт CustomMembers)
-
+        public int CompareTo(object obj)
+        {
+            if (this.ДатаИзг < ((ГотовыйПродукт)obj).ДатаИзг)
+                return -1;
+            if (this.ДатаИзг == ((ГотовыйПродукт)obj).ДатаИзг)
+                return 0;
+            if (this.ДатаИзг < ((ГотовыйПродукт)obj).ДатаИзг)
+                return 1;
+            return 0;
+        }
         // *** End programmer edit section *** (ГотовыйПродукт CustomMembers)
 
         
@@ -144,8 +153,8 @@ namespace IIS.АСУ_Кондитерская
             set
             {
                 // *** Start programmer edit section *** (ГотовыйПродукт.НаСкладе Set start)
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException();
+                if (value < 0 || Выпущено < value)
+                    throw new Exception("На склад не может поступить продукции больше, чем её было выпущено.");
                 // *** End programmer edit section *** (ГотовыйПродукт.НаСкладе Set start)
                 this.fНаСкладе = value;
                 // *** Start programmer edit section *** (ГотовыйПродукт.НаСкладе Set end)

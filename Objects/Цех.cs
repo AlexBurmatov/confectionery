@@ -33,7 +33,8 @@ namespace IIS.АСУ_Кондитерская
     [View("ЦехE", new string[] {
             "Номер",
             "Адрес",
-            "Описание"})]
+            "Описание",
+            "Количество"})]
     [AssociatedDetailViewAttribute("ЦехE", "ГотовыйПродукт", "ГотовыйПродуктE", true, "", "Готовый продукт", true, new string[] {
             ""})]
     [View("ЦехL", new string[] {

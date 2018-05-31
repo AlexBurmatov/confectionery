@@ -5,9 +5,7 @@ namespace IIS.АСУ_Кондитерская
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Web.Controls;
     using ICSSoft.STORMNET.Web.AjaxControls;
-    using ICSSoft.STORMNET.Business;
-    using NewPlatform.Flexberry.Security;
-
+    
     public partial class ТорговаяТочкаE : BaseEditForm<ТорговаяТочка>
     {
         /// <summary>
@@ -31,19 +29,6 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Preload()
         {
-            this.ReadOnly = true;
-            var ds = DataServiceProvider.DataService;
-            var s = ds.SecurityManager;
-            var manager = new NewPlatform.Flexberry.Security.UserManager(ds, new Md5PasswordHasher());
-            var roles = manager.GetRolesOfUser(Context.User.Identity.Name);
-            foreach (var role in roles)
-            {
-                if (role.Contains("admin"))
-                {
-                    this.ReadOnly = false;
-                    break;
-                }
-            }
         }
 
         /// <summary>
