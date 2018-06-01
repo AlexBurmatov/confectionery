@@ -58,7 +58,7 @@
 <div class="clearfix">
   <asp:Label CssClass="descLbl" ID="ctrlСуммаLabel" runat="server" Text="Сумма" EnableViewState="False">
 </asp:Label>
-<ac:DecimalTextBox CssClass="descTxt" ID="ctrlСумма" runat="server">
+<ac:DecimalTextBox CssClass="descTxt" ID="ctrlСумма" runat="server" Enabled="false">
 </ac:DecimalTextBox>
 
 <asp:RequiredFieldValidator ID="ctrlСуммаRequiredFieldValidator" runat="server" ControlToValidate="ctrlСумма"
@@ -69,7 +69,7 @@
 <div class="clearfix">
   <asp:Label CssClass="descLbl" ID="ctrlИндивидуальныйЗаказLabel" runat="server" Text="Индивидуальный заказ" EnableViewState="False">
 </asp:Label>
-<ac:MasterEditorAjaxDropDown ID="ctrlИндивидуальныйЗаказ" CssClass="descTxt" runat="server" EnablePostBack="false" OnInit="ctrlИндивидуальныйЗаказ_Init" OnLoad="ctrlИндивидуальныйЗаказ_Load"/>
+<ac:MasterEditorAjaxDropDown ID="ctrlИндивидуальныйЗаказ" CssClass="descTxt" runat="server" EnablePostBack="false"/>
 
 
 </div>

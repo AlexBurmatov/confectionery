@@ -10,6 +10,7 @@ namespace IIS.АСУ_Кондитерская
     using ICSSoft.STORMNET.FunctionalLanguage;
     using System.Linq;
     using ICSSoft.STORMNET.Business.LINQProvider;
+    using ICSSoft.STORMNET.Windows.Forms;
 
     public partial class ЧекE : BaseEditForm<Чек>
     {
@@ -18,7 +19,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         public ЧекE()
             : base(Чек.Views.ЧекE)
-        {            
+        {
         }
 
         /// <summary>
@@ -34,7 +35,6 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Preload()
         {
-                       
         }
 
         /// <summary>
@@ -42,27 +42,31 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PreApplyToControls()
         {
-            var currentUser = Context.User.Identity.Name;
-
-            IDataService ds = DataServiceProvider.DataService;
-            var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
-            SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
-            lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
-                new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
-            var manager = ds.LoadObjects(lcs)[0] as Продавец;
-
-            this.DataObject = new Чек
+            if (Context.User.IsInRole("Продавец"))
             {
-                Продавец = manager
-            };
-            ctrlПродавец.Enabled = false;
+                // Определяем текущего пользователя
+                var currentUser = Context.User.Identity.Name;
+                IDataService ds = DataServiceProvider.DataService;
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
+                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
+                lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                    new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
+                var manager = ds.LoadObjects(lcs)[0] as Продавец;
 
-            IQueryable<ИндивидуальныйЗаказ> limit =
-                ds.Query<ИндивидуальныйЗаказ>(ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).Where(order =>
-                order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey));
-            Function limitfunc = LinqToLcs.GetLcs(limit.Expression, ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).LimitFunction;
+                // Устанавливаем текущего продавца в поле заказа
+                this.DataObject = new Чек();
+                this.DataObject.Продавец = manager;
+                ctrlПродавец.Enabled = false;
 
-            ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
+                // Фильтруем список индивидуальных заказов в соотв. с торговой точкой, на которой работает текущий продавец
+                IQueryable<ИндивидуальныйЗаказ> limit =
+                    ds.Query<ИндивидуальныйЗаказ>(ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).Where(order =>
+                    order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey) && order.Состояние.Equals(СостояниеЗаказа.Выполненный));
+                Function limitfunc = LinqToLcs.GetLcs(limit.Expression, ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).LimitFunction;
+
+                ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
+                ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
+            }             
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PostApplyToControls()
         {
-            Page.Validate();
+            Page.Validate();            
         }
 
         /// <summary>
@@ -99,47 +103,25 @@ namespace IIS.АСУ_Кондитерская
             return base.SaveObject();
         }
 
-        protected void ctrlИндивидуальныйЗаказ_Init(object sender, System.EventArgs e)
+
+        protected void ctrlИндивидуальныйЗаказ_DataBinding(object sender, System.EventArgs e)
         {
-            // настроить отображение продуктов из заказа в чеке
-        }
+            var order = ((MasterEditorAjaxDropDown)sender).Object as ИндивидуальныйЗаказ;
+            if (order == null)
+                return;
 
-        protected void ctrlИндивидуальныйЗаказ_Load(object sender, System.EventArgs e)
-        {
-            // отфильтровать список доступных заказов (в соотв. с текущей торговой точкой и статусом "Выполненный")
-
-            /*IDataService ds = DataServiceProvider.DataService;
-            var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(СтрокаЗаказа), "СтрокаЗаказаE");
-            SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
-            lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
-                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<СтрокаЗаказа>(x => x.Заказ)), UpdatedObject.__PrimaryKey);
-            var order_points = ds.LoadObjects(lcs);
-
-            foreach (var point in order_points)
+            IDataService ds = DataServiceProvider.DataService;
+            foreach (var point in order.СтрокаЗаказа)
             {
-                var product_key = ((СтрокаЗаказа)point).Продукт.__PrimaryKey;
-
-                // Загружаем требуемые продукты, которые хранятся на складе в цехе
-                var lcs2 = LoadingCustomizationStruct.GetSimpleStruct(typeof(ГотовыйПродукт), "ГотовыйПродуктE");
-                lcs2.LimitFunction = ld.GetFunction(ld.funcEQ,
-                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ГотовыйПродукт>(x => x.Продукт)), product_key);
-                var complete_products = ds.LoadObjects(lcs2);
-
-                // Посчитаем, сколько готовых продуктов (с разной датой изготовления) содержится на складе
-                int total_count = 0;
-                foreach (var comp_prod in complete_products)
-                {
-                    total_count += ((ГотовыйПродукт)comp_prod).НаСкладе;
-                }
-
-                // Если продукции меньше, чем требуется в заказе, то кидаем исключение
-                if (total_count < ((СтрокаЗаказа)point).Количество)
-                {
-                    throw new Exception(((СтрокаЗаказа)point).Продукт.Наименование.ToString() + ". На складе - " + total_count.ToString() + ". Требуется - " +
-                        ((СтрокаЗаказа)point).Количество.ToString() + ". Перевод заказа в статус \"Выполненный\" невозможно.");
-                }
+                ds.LoadObject((DataObject)point);
             }
-            ctrlИндивидуальныйЗаказ.LimitFunction*/
+
+
+            /*
+            var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(СтрокаЗаказа), "СтрокаЗаказаE");
+            ExternalLangDef ld = ExternalLangDef.LanguageDef;
+            lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<СтрокаЗаказа>(x => x.)), currentUser);*/
         }
     }
 }

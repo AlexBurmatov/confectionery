@@ -155,6 +155,7 @@ namespace IIS.АСУ_Кондитерская
                     }
                 }
                 // --------------------- ПРОДУКТЫ ОТПРАВЛЕНЫ В ТОРГОВУЮ ТОЧКУ -----------------
+                UpdatedObject.ДатаПоступления = DateTime.Now;
                 return forupdate.ToArray();
             }
             return new ICSSoft.STORMNET.DataObject[0];
