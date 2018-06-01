@@ -30,6 +30,10 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Preload()
         {
+            if (Context.User.IsInRole("Продавец"))
+            {
+                Response.Redirect("~/forms/TorgovayaTochka/TorgovayaTochkaE.aspx");
+            }
         }
 
         /// <summary>

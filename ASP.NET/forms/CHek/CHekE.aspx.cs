@@ -11,6 +11,7 @@ namespace IIS.АСУ_Кондитерская
     using System.Linq;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using ICSSoft.STORMNET.Windows.Forms;
+    using ICSSoft.STORMNET.Web.Tools.WGEFeatures;
 
     public partial class ЧекE : BaseEditForm<Чек>
     {
@@ -66,7 +67,13 @@ namespace IIS.АСУ_Кондитерская
 
                 ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
                 ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
-            }             
+            }
+            // Ограничения на лукап Продукта
+            /*ExternalLangDef langDef = ExternalLangDef.LanguageDef;
+            ctrlПозицияВЧеке.AddLookUpSettings(Information.ExtractPropertyPath<ГотовыйПродукт>(r => r.Продукт), new LookUpSetting
+            {
+                LimitFunction = langDef.GetFunction(langDef.funcExist,)
+            });*/
         }
 
         /// <summary>
@@ -83,6 +90,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Postload()
         {
+
         }
 
         /// <summary>
