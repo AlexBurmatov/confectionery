@@ -43,7 +43,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PreApplyToControls()
         {
-            if (Context.User.IsInRole("Продавец"))
+            if (Context.User.IsInRole("Продавец") && this.DataObject == null)
             {
                 // Определяем текущего пользователя
                 var currentUser = Context.User.Identity.Name;
@@ -57,23 +57,19 @@ namespace IIS.АСУ_Кондитерская
                 // Устанавливаем текущего продавца в поле заказа
                 this.DataObject = new Чек();
                 this.DataObject.Продавец = manager;
+                this.DataObject.ТорговаяТочка = manager.ТорговаяТочка;                
                 ctrlПродавец.Enabled = false;
+                ctrlТорговаяТочка.Enabled = false;
 
                 // Фильтруем список индивидуальных заказов в соотв. с торговой точкой, на которой работает текущий продавец
                 IQueryable<ИндивидуальныйЗаказ> limit =
                     ds.Query<ИндивидуальныйЗаказ>(ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).Where(order =>
-                    order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey) && order.Состояние.Equals(СостояниеЗаказа.Выполненный));
+                    order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey) && order.Состояние.Equals("Выполненный"));
                 Function limitfunc = LinqToLcs.GetLcs(limit.Expression, ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).LimitFunction;
 
                 ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
                 ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
             }
-            // Ограничения на лукап Продукта
-            /*ExternalLangDef langDef = ExternalLangDef.LanguageDef;
-            ctrlПозицияВЧеке.AddLookUpSettings(Information.ExtractPropertyPath<ГотовыйПродукт>(r => r.Продукт), new LookUpSetting
-            {
-                LimitFunction = langDef.GetFunction(langDef.funcExist,)
-            });*/
         }
 
         /// <summary>

@@ -74,6 +74,16 @@
 
 </div>
 <div class="clearfix">
+  <asp:Label CssClass="descLbl" ID="ctrlТорговаяТочкаLabel" runat="server" Text="Торговая точка" EnableViewState="False">
+</asp:Label>
+<ac:MasterEditorAjaxDropDown ID="ctrlТорговаяТочка" CssClass="descTxt" runat="server" EnablePostBack="false"/>
+
+<asp:RequiredFieldValidator ID="ctrlТорговаяТочкаRequiredFieldValidator" runat="server" ControlToValidate="ctrlТорговаяТочка"
+                            ErrorMessage="Не указано: ТорговаяТочка" Text="*" 
+                            EnableClientScript="true" ValidationGroup="savedoc" />
+
+</div>
+<div class="clearfix">
   <asp:Label CssClass="descLbl" ID="ctrlПродавецLabel" runat="server" Text="Продавец" EnableViewState="False">
 </asp:Label>
 <ac:MasterEditorAjaxDropDown ID="ctrlПродавец" CssClass="descTxt" runat="server" EnablePostBack="false"/>

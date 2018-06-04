@@ -13,33 +13,6 @@ namespace IIS.АСУ_Кондитерская {
     public partial class ЦехE {
         
         /// <summary>
-        /// ctrlНомерLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ctrlНомерLabel;
-        
-        /// <summary>
-        /// ctrlНомер control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::ICSSoft.STORMNET.Web.AjaxControls.AlphaNumericTextBox ctrlНомер;
-        
-        /// <summary>
-        /// ctrlНомерRequiredFieldValidator control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator ctrlНомерRequiredFieldValidator;
-        
-        /// <summary>
         /// ctrlАдресLabel control.
         /// </summary>
         /// <remarks>
@@ -67,22 +40,22 @@ namespace IIS.АСУ_Кондитерская {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator ctrlАдресRequiredFieldValidator;
         
         /// <summary>
-        /// ctrlОписаниеLabel control.
+        /// ctrlКоличествоLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ctrlОписаниеLabel;
+        protected global::System.Web.UI.WebControls.Label ctrlКоличествоLabel;
         
         /// <summary>
-        /// ctrlОписание control.
+        /// ctrlКоличество control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ctrlОписание;
+        protected global::ICSSoft.STORMNET.Web.AjaxControls.AlphaNumericTextBox ctrlКоличество;
         
         /// <summary>
         /// ScriptManager1 control.

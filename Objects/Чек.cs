@@ -39,22 +39,27 @@ namespace IIS.АСУ_Кондитерская
             "ИндивидуальныйЗаказ as \'Индивидуальный заказ\'",
             "ИндивидуальныйЗаказ.ФИОЗаказчика as \'ФИО заказчика\'",
             "ИндивидуальныйЗаказ.ТорговаяТочка",
+            "ТорговаяТочка as \'Торговая точка\'",
+            "ТорговаяТочка.Адрес",
             "Продавец as \'Продавец\'",
             "Продавец.ФИО",
             "Примечание as \'Примечание\'"}, Hidden=new string[] {
             "ИндивидуальныйЗаказ.ФИОЗаказчика",
             "ИндивидуальныйЗаказ.ТорговаяТочка",
+            "ТорговаяТочка.Адрес",
             "Продавец.ФИО"})]
     [AssociatedDetailViewAttribute("ЧекE", "ПозицияВЧеке", "ПозицияВЧекеE", true, "", "Позиция в чеке", true, new string[] {
             ""})]
     [MasterViewDefineAttribute("ЧекE", "ИндивидуальныйЗаказ", ICSSoft.STORMNET.LookupTypeEnum.Combo, "", "ФИОЗаказчика")]
-    [MasterViewDefineAttribute("ЧекE", "Продавец", ICSSoft.STORMNET.LookupTypeEnum.Combo, "", "Фамилия")]
+    [MasterViewDefineAttribute("ЧекE", "ТорговаяТочка", ICSSoft.STORMNET.LookupTypeEnum.Combo, "", "Адрес")]
+    [MasterViewDefineAttribute("ЧекE", "Продавец", ICSSoft.STORMNET.LookupTypeEnum.Combo, "", "ФИО")]
     [View("ЧекL", new string[] {
             "Состояние as \'Состояние\'",
             "Номер as \'Номер\'",
             "ДатаЗаполнения as \'Дата заполнения\'",
             "Сумма as \'Сумма\'",
             "ИндивидуальныйЗаказ.ФИОЗаказчика as \'ФИО заказчика\'",
+            "ТорговаяТочка.Адрес as \'Адрес торговой точки\'",
             "Продавец.Фамилия as \'Продавец\'",
             "Примечание as \'Примечание\'"})]
     public class Чек : IIS.АСУ_Кондитерская.Документ
@@ -62,11 +67,11 @@ namespace IIS.АСУ_Кондитерская
         
         private IIS.АСУ_Кондитерская.СостояниеЧека fСостояние;
         
-        private double fСумма;
-        
         private string fПримечание;
         
         private IIS.АСУ_Кондитерская.Продавец fПродавец;
+        
+        private IIS.АСУ_Кондитерская.ТорговаяТочка fТорговаяТочка;
         
         private IIS.АСУ_Кондитерская.ИндивидуальныйЗаказ fИндивидуальныйЗаказ;
         
@@ -115,29 +120,21 @@ namespace IIS.АСУ_Кондитерская
         // *** Start programmer edit section *** (Чек.Сумма CustomAttributes)
 
         // *** End programmer edit section *** (Чек.Сумма CustomAttributes)
+        [ICSSoft.STORMNET.NotStored()]
         [NotNull()]
         public virtual double Сумма
         {
             get
             {
-                // *** Start programmer edit section *** (Чек.Сумма Get start)
-
-                // *** End programmer edit section *** (Чек.Сумма Get start)
-                double result = this.fСумма;
-                // *** Start programmer edit section *** (Чек.Сумма Get end)
-
-                // *** End programmer edit section *** (Чек.Сумма Get end)
-                return result;
+                // *** Start programmer edit section *** (Чек.Сумма Get)
+                return 0;
+                // *** End programmer edit section *** (Чек.Сумма Get)
             }
             set
             {
-                // *** Start programmer edit section *** (Чек.Сумма Set start)
+                // *** Start programmer edit section *** (Чек.Сумма Set)
 
-                // *** End programmer edit section *** (Чек.Сумма Set start)
-                this.fСумма = value;
-                // *** Start programmer edit section *** (Чек.Сумма Set end)
-
-                // *** End programmer edit section *** (Чек.Сумма Set end)
+                // *** End programmer edit section *** (Чек.Сумма Set)
             }
         }
         
@@ -204,6 +201,40 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (Чек.Продавец Set end)
 
                 // *** End programmer edit section *** (Чек.Продавец Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Чек.
+        /// </summary>
+        // *** Start programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
+
+        // *** End programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
+        [PropertyStorage(new string[] {
+                "ТорговаяТочка"})]
+        [NotNull()]
+        public virtual IIS.АСУ_Кондитерская.ТорговаяТочка ТорговаяТочка
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Get start)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Get start)
+                IIS.АСУ_Кондитерская.ТорговаяТочка result = this.fТорговаяТочка;
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Get end)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Set start)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Set start)
+                this.fТорговаяТочка = value;
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Set end)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Set end)
             }
         }
         

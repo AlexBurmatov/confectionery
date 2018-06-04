@@ -148,6 +148,33 @@ namespace IIS.АСУ_Кондитерская {
         protected global::ICSSoft.STORMNET.Web.AjaxControls.MasterEditorAjaxDropDown ctrlИндивидуальныйЗаказ;
         
         /// <summary>
+        /// ctrlТорговаяТочкаLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ctrlТорговаяТочкаLabel;
+        
+        /// <summary>
+        /// ctrlТорговаяТочка control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::ICSSoft.STORMNET.Web.AjaxControls.MasterEditorAjaxDropDown ctrlТорговаяТочка;
+        
+        /// <summary>
+        /// ctrlТорговаяТочкаRequiredFieldValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator ctrlТорговаяТочкаRequiredFieldValidator;
+        
+        /// <summary>
         /// ctrlПродавецLabel control.
         /// </summary>
         /// <remarks>

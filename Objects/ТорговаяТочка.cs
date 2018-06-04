@@ -16,7 +16,9 @@ namespace IIS.АСУ_Кондитерская
     
     
     // *** Start programmer edit section *** (Using statements)
-
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -40,7 +42,8 @@ namespace IIS.АСУ_Кондитерская
     [MasterViewDefineAttribute("ТорговаяТочкаE", "Цех", ICSSoft.STORMNET.LookupTypeEnum.Combo, "", "Адрес")]
     [View("ТорговаяТочкаL", new string[] {
             "Номер as \'Номер\'",
-            "Адрес as \'Адрес\'"})]
+            "Адрес as \'Адрес\'",
+            "КоэффБезотх as \'Безотходность (%)\'"})]
     [AssociatedDetailViewAttribute("ТорговаяТочкаL", "ПродуктНаПродажу", "ПродуктНаПродажуE", true, "", "Продукт на продажу", true, new string[] {
             ""})]
     public class ТорговаяТочка : ICSSoft.STORMNET.DataObject
@@ -123,6 +126,61 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (ТорговаяТочка.Адрес Set end)
 
                 // *** End programmer edit section *** (ТорговаяТочка.Адрес Set end)
+            }
+        }
+        
+        /// <summary>
+        /// КоэффБезотх.
+        /// </summary>
+        // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх CustomAttributes)
+
+        // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх CustomAttributes)
+        [ICSSoft.STORMNET.NotStored()]
+        public virtual double КоэффБезотх
+        {
+            get
+            {
+                // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
+                IDataService ds = DataServiceProvider.DataService;
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(УничтоженныйПродукт),"УничтоженныйПродуктE");
+                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
+                lcs.LimitFunction = ld.GetFunction(ld.funcEQ, 
+                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<УничтоженныйПродукт>(r => r.ТорговаяТочка)), 
+                    this.__PrimaryKey);
+                var dobjs = ds.LoadObjects(lcs);
+
+                int count_util = 0;
+                foreach(УничтоженныйПродукт util in dobjs)
+                {
+                    count_util += util.Количество;
+                }
+
+                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Заказ), "ЗаказE");
+                lcs.LimitFunction = ld.GetFunction(ld.funcAND,
+                    ld.GetFunction(ld.funcEQ,
+                        new VariableDef(ld.StringType, Information.ExtractPropertyPath<Заказ>(r => r.Состояние)),
+                        "Выполненный"),
+                    ld.GetFunction(ld.funcEQ,
+                        new VariableDef(ld.GuidType, Information.ExtractPropertyPath<Заказ>(r => r.ТорговаяТочка)),
+                        this.__PrimaryKey));
+                var orders = ds.LoadObjects(lcs);
+
+                int count_total = 0;
+                foreach (Заказ order in orders)
+                {
+                    count_total += order.СтрокаЗаказа.CountProduct();
+                }
+                if (count_total != 0)
+                    return 100-Math.Round((1.0)*count_util / count_total * 100);
+                else
+                    return -1;
+                // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
+            }
+            set
+            {
+                // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
+
+                // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
             }
         }
         

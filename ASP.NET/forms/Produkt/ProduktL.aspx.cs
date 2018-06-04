@@ -2,6 +2,10 @@
 namespace IIS.АСУ_Кондитерская
 {
     using System;
+    using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
     using ICSSoft.STORMNET.Web.Controls;
 
     using Resources;
@@ -30,6 +34,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Preload()
         {
+
         }
 
         /// <summary>
@@ -37,6 +42,18 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Postload()
         {
+            IDataService ds = DataServiceProvider.DataService;
+            var dobjs = ds.LoadObjects(Продукт.Views.ПродуктL);
+
+            int count = 0;
+            double price = 0;
+            foreach(Продукт prod in dobjs)
+            {
+                count++;
+                price += prod.Цена / prod.Масса;
+            }
+            double result = 1000 * price / count;
+            descAverPrice.Text = result.ToString();
         }
     }
 }

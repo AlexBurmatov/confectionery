@@ -32,13 +32,17 @@ namespace IIS.АСУ_Кондитерская
     [View("УничтоженныйПродуктE", new string[] {
             "Количество as \'Количество\'",
             "Продукт as \'Продукт\'",
-            "Продукт.Наименование as \'Наименование\'"}, Hidden=new string[] {
+            "Продукт.Наименование as \'Наименование\'",
+            "ДатаУничтожения as \'Дата уничтожения\'",
+            "ТорговаяТочка"}, Hidden=new string[] {
             "Продукт.Наименование"})]
     [MasterViewDefineAttribute("УничтоженныйПродуктE", "Продукт", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Наименование")]
     public class УничтоженныйПродукт : ICSSoft.STORMNET.DataObject
     {
         
         private int fКоличество;
+        
+        private System.DateTime fДатаУничтожения;
         
         private IIS.АСУ_Кондитерская.Продукт fПродукт;
         
@@ -78,6 +82,37 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (УничтоженныйПродукт.Количество Set end)
 
                 // *** End programmer edit section *** (УничтоженныйПродукт.Количество Set end)
+            }
+        }
+        
+        /// <summary>
+        /// ДатаУничтожения.
+        /// </summary>
+        // *** Start programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения CustomAttributes)
+
+        // *** End programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения CustomAttributes)
+        public virtual System.DateTime ДатаУничтожения
+        {
+            get
+            {
+                // *** Start programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Get start)
+
+                // *** End programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Get start)
+                System.DateTime result = this.fДатаУничтожения;
+                // *** Start programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Get end)
+
+                // *** End programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Set start)
+
+                // *** End programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Set start)
+                this.fДатаУничтожения = value;
+                // *** Start programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Set end)
+
+                // *** End programmer edit section *** (УничтоженныйПродукт.ДатаУничтожения Set end)
             }
         }
         
@@ -168,7 +203,7 @@ namespace IIS.АСУ_Кондитерская
             }
         }
     }
-    
+
     /// <summary>
     /// Detail array of УничтоженныйПродукт.
     /// </summary>
@@ -177,7 +212,7 @@ namespace IIS.АСУ_Кондитерская
     // *** End programmer edit section *** (DetailArrayDetailArrayOfУничтоженныйПродукт CustomAttributes)
     public class DetailArrayOfУничтоженныйПродукт : ICSSoft.STORMNET.DetailArray
     {
-        
+
         // *** Start programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт members)
 
         // *** End programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт members)

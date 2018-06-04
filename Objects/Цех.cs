@@ -31,10 +31,8 @@ namespace IIS.АСУ_Кондитерская
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("ЦехE", new string[] {
-            "Номер",
-            "Адрес",
-            "Описание",
-            "Количество"})]
+            "Адрес as \'Адрес\'",
+            "Количество as \'Количество продукции на складе\'"})]
     [AssociatedDetailViewAttribute("ЦехE", "ГотовыйПродукт", "ГотовыйПродуктE", true, "", "Готовый продукт", true, new string[] {
             ""})]
     [View("ЦехL", new string[] {

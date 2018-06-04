@@ -41,7 +41,7 @@ namespace IIS.АСУ_Кондитерская
             "Продукт.Наименование",
             "Цех"})]
     [MasterViewDefineAttribute("ГотовыйПродуктE", "Продукт", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Наименование")]
-    public class ГотовыйПродукт : ICSSoft.STORMNET.DataObject
+    public class ГотовыйПродукт : ICSSoft.STORMNET.DataObject, IComparable
     {
         
         private System.DateTime fДатаИзг = System.DateTime.Now;

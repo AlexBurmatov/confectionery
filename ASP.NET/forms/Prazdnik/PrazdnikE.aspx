@@ -41,6 +41,12 @@
                             EnableClientScript="true" ValidationGroup="savedoc" />
 
 </div>
+<asp:ScriptManager ID="ScriptManager1" runat="server" >
+</asp:ScriptManager>
+
+<div style="clear: left">
+	<ac:AjaxGroupEdit ID="ctrlПродуктКПразднику" runat="server" ReadOnly="false" />
+</div>
 <br/>
 
 </div>

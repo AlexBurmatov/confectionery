@@ -178,12 +178,21 @@ namespace IIS.АСУ_Кондитерская
     // *** End programmer edit section *** (DetailArrayDetailArrayOfСтрокаЗаказа CustomAttributes)
     public class DetailArrayOfСтрокаЗаказа : ICSSoft.STORMNET.DetailArray
     {
-        
-        // *** Start programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfСтрокаЗаказа members)
 
+        // *** Start programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfСтрокаЗаказа members)
+        [AggregationFunction(null,"Количество")]
+        public int CountProduct()
+        {
+            int count = 0;
+            foreach(СтрокаЗаказа x in this)
+            {
+                count += x.Количество;
+            }
+            return count;
+        }
         // *** End programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfСтрокаЗаказа members)
 
-        
+
         /// <summary>
         /// Construct detail array.
         /// </summary>

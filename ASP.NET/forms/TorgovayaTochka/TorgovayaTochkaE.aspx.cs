@@ -94,5 +94,31 @@ namespace IIS.АСУ_Кондитерская
         {
             return base.SaveObject();
         }
+
+        protected void CheckProducts_Click(object sender, System.EventArgs e)
+        {
+            IDataService ds = DataServiceProvider.DataService;
+            foreach (ПродуктНаПродажу saleProduct in ((ТорговаяТочка)this.DataObject).ПродуктНаПродажу)
+            {
+                ds.LoadObject(saleProduct.Продукт);
+                var period = System.DateTime.Now - saleProduct.ДатаИзг;
+                if (period.TotalHours > saleProduct.Продукт.СрокГодности)
+                {
+                    // срок годности истек => переводим продукт в уничтоженные
+                    var util = new УничтоженныйПродукт()
+                    {
+                        Количество = saleProduct.Количество,
+                        Продукт = saleProduct.Продукт,
+                        ТорговаяТочка = saleProduct.ТорговаяТочка,
+                        ДатаУничтожения = System.DateTime.Now                        
+                    };
+                    ds.UpdateObject(util);
+
+                    saleProduct.SetStatus(ObjectStatus.Deleted);
+                    ds.UpdateObject(saleProduct);
+                }                
+            }
+            this.Response.Redirect(this.Request.RawUrl);
+        }
     }
 }

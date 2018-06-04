@@ -33,8 +33,6 @@ namespace IIS.АСУ_Кондитерская
             "Продукт as \'Продукт\'",
             "Продукт.Наименование as \'Наименование\'",
             "Количество as \'Количество\'",
-            "Вес as \'Вес\'",
-            "Цена as \'Цена\'",
             "Сумма as \'Сумма\'"}, Hidden=new string[] {
             "Продукт.Наименование"})]
     [MasterViewDefineAttribute("ПозицияВЧекеE", "Продукт", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Наименование")]
@@ -42,10 +40,6 @@ namespace IIS.АСУ_Кондитерская
     {
         
         private int fКоличество;
-        
-        private double fВес;
-        
-        private double fЦена;
         
         private IIS.АСУ_Кондитерская.Продукт fПродукт;
         
@@ -85,70 +79,6 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (ПозицияВЧеке.Количество Set end)
 
                 // *** End programmer edit section *** (ПозицияВЧеке.Количество Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Вес.
-        /// </summary>
-        // *** Start programmer edit section *** (ПозицияВЧеке.Вес CustomAttributes)
-
-        // *** End programmer edit section *** (ПозицияВЧеке.Вес CustomAttributes)
-        [NotNull()]
-        public virtual double Вес
-        {
-            get
-            {
-                // *** Start programmer edit section *** (ПозицияВЧеке.Вес Get start)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Вес Get start)
-                double result = this.fВес;
-                // *** Start programmer edit section *** (ПозицияВЧеке.Вес Get end)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Вес Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (ПозицияВЧеке.Вес Set start)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Вес Set start)
-                this.fВес = value;
-                // *** Start programmer edit section *** (ПозицияВЧеке.Вес Set end)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Вес Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Цена.
-        /// </summary>
-        // *** Start programmer edit section *** (ПозицияВЧеке.Цена CustomAttributes)
-
-        // *** End programmer edit section *** (ПозицияВЧеке.Цена CustomAttributes)
-        [NotNull()]
-        public virtual double Цена
-        {
-            get
-            {
-                // *** Start programmer edit section *** (ПозицияВЧеке.Цена Get start)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Цена Get start)
-                double result = this.fЦена;
-                // *** Start programmer edit section *** (ПозицияВЧеке.Цена Get end)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Цена Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (ПозицияВЧеке.Цена Set start)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Цена Set start)
-                this.fЦена = value;
-                // *** Start programmer edit section *** (ПозицияВЧеке.Цена Set end)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Цена Set end)
             }
         }
         

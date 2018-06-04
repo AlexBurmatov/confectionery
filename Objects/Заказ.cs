@@ -53,7 +53,7 @@ namespace IIS.АСУ_Кондитерская
         
         private IIS.АСУ_Кондитерская.СостояниеЗаказа fСостояние;
         
-        private System.DateTime fДатаПоступления;
+        private System.DateTime? fДатаПоступления;
         
         private IIS.АСУ_Кондитерская.ТорговаяТочка fТорговаяТочка;
         
@@ -102,14 +102,14 @@ namespace IIS.АСУ_Кондитерская
         // *** Start programmer edit section *** (Заказ.ДатаПоступления CustomAttributes)
 
         // *** End programmer edit section *** (Заказ.ДатаПоступления CustomAttributes)
-        public virtual System.DateTime ДатаПоступления
+        public virtual System.DateTime? ДатаПоступления
         {
             get
             {
                 // *** Start programmer edit section *** (Заказ.ДатаПоступления Get start)
 
                 // *** End programmer edit section *** (Заказ.ДатаПоступления Get start)
-                System.DateTime result = this.fДатаПоступления;
+                System.DateTime? result = this.fДатаПоступления;
                 // *** Start programmer edit section *** (Заказ.ДатаПоступления Get end)
 
                 // *** End programmer edit section *** (Заказ.ДатаПоступления Get end)
