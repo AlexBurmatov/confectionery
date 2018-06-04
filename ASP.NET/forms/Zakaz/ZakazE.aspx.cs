@@ -61,7 +61,7 @@ namespace IIS.АСУ_Кондитерская
             {
                 LimitFunction = ld.GetFunction(ld.funcEQ,
                     new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продукт>(r => r.Статус)), "В продаже"),
-                ColumnsSort = new ColumnsSortDef[] { new ColumnsSortDef("Код", SortOrder.Asc) }
+                ColumnsSort = new ColumnsSortDef[] { new ColumnsSortDef("Код", SortOrder.Asc) }                
             });
         }
 

@@ -43,32 +43,38 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PreApplyToControls()
         {
-            if (Context.User.IsInRole("Продавец") && this.DataObject == null)
+            if (Context.User.IsInRole("Продавец"))
             {
-                // Определяем текущего пользователя
-                var currentUser = Context.User.Identity.Name;
-                IDataService ds = DataServiceProvider.DataService;
-                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
-                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
-                lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
-                    new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
-                var manager = ds.LoadObjects(lcs)[0] as Продавец;
+                if (this.DataObject == null)
+                {
+                    // Определяем текущего пользователя
+                    var currentUser = Context.User.Identity.Name;
+                    IDataService ds = DataServiceProvider.DataService;
+                    var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
+                    SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
+                    lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                        new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
+                    var manager = ds.LoadObjects(lcs)[0] as Продавец;
 
-                // Устанавливаем текущего продавца в поле заказа
-                this.DataObject = new Чек();
-                this.DataObject.Продавец = manager;
-                this.DataObject.ТорговаяТочка = manager.ТорговаяТочка;                
+                    // Устанавливаем текущего продавца в поле заказа
+                    this.DataObject = new Чек();
+                    this.DataObject.Продавец = manager;
+                    this.DataObject.ТорговаяТочка = manager.ТорговаяТочка;
+
+                    // Фильтруем список индивидуальных заказов в соотв. с торговой точкой, на которой работает текущий продавец
+                    IQueryable<ИндивидуальныйЗаказ> limit =
+                        ds.Query<ИндивидуальныйЗаказ>(ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).Where(order =>
+                        order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey) && order.Состояние.Equals("Выполненный"));
+                    Function limitfunc = LinqToLcs.GetLcs(limit.Expression, ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).LimitFunction;
+
+                    ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
+                    ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
+                }
                 ctrlПродавец.Enabled = false;
                 ctrlТорговаяТочка.Enabled = false;
-
-                // Фильтруем список индивидуальных заказов в соотв. с торговой точкой, на которой работает текущий продавец
-                IQueryable<ИндивидуальныйЗаказ> limit =
-                    ds.Query<ИндивидуальныйЗаказ>(ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).Where(order =>
-                    order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey) && order.Состояние.Equals("Выполненный"));
-                Function limitfunc = LinqToLcs.GetLcs(limit.Expression, ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).LimitFunction;
-
-                ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
-                ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
+                ctrlИндивидуальныйЗаказ.Enabled = false;
+                if (this.DataObject.GetStatus() == ObjectStatus.Created)
+                    ctrlИндивидуальныйЗаказ.Enabled = true;
             }
         }
 

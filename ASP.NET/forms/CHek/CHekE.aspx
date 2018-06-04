@@ -45,7 +45,7 @@
   <asp:Label CssClass="descLbl" ID="ctrlДатаЗаполненияLabel" runat="server" Text="Дата заполнения" EnableViewState="False">
 </asp:Label>
 <div class="descTxt">
-    <ac:DatePicker ID="ctrlДатаЗаполнения" runat="server"/>
+    <ac:DatePicker ID="ctrlДатаЗаполнения" runat="server" Enabled="false"/>
 </div>
 <asp:RequiredFieldValidator ID="ctrlДатаЗаполненияRequiredFieldValidator" runat="server" ControlToValidate="ctrlДатаЗаполнения"
                             ErrorMessage="Не указано: ДатаЗаполнения" Text="*" 
