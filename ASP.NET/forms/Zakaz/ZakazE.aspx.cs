@@ -56,11 +56,12 @@ namespace IIS.АСУ_Кондитерская
                 this.DataObject.ТорговаяТочка = manager.ТорговаяТочка;
                 ctrlТорговаяТочка.Enabled = false;
             }
-            
+
             ctrlСтрокаЗаказа.AddLookUpSettings(Information.ExtractPropertyPath<СтрокаЗаказа>(r => r.Продукт), new LookUpSetting
             {
                 LimitFunction = ld.GetFunction(ld.funcEQ,
-                    new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продукт>(r => r.Статус)), "В продаже")
+                    new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продукт>(r => r.Статус)), "В продаже"),
+                ColumnsSort = new ColumnsSortDef[] { new ColumnsSortDef("Код", SortOrder.Asc) }
             });
         }
 
