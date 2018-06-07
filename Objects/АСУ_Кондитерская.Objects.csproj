@@ -32,6 +32,15 @@
     <DocumentationFile>bin\Release\АСУ_Кондитерская.Objects.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IIS.University.PKHelper, Version=1.4.0.0, Culture=neutral, PublicKeyToken=d8a331e0b60b65c9, processorArchitecture=MSIL">
+      <HintPath>..\packages\IIS.University.PKHelper.1.5.1\lib\net40\IIS.University.PKHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.0.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.0.8\lib\net45\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=2.0.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.2.0.2\lib\net45\Remotion.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>System.dll</HintPath>
     </Reference>
@@ -43,15 +52,6 @@
     </Reference>
     <Reference Include="LogService">
       <HintPath>..\packages\NewPlatform.Flexberry.LogService.1.1.0\lib\net45\LogService.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Security">
-      <HintPath>..\packages\Npgsql.2.2.7\lib\net45\Mono.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Npgsql">
-      <HintPath>..\packages\Npgsql.2.2.7\lib\net45\Npgsql.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq">
-      <HintPath>..\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -164,9 +164,6 @@
     <Compile Include="СтатусПродукта.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="УничтоженныйПродукт.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Сотрудник.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -183,6 +180,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Compile Include="ПродуктКПразднику.cs">
       <SubType>Code</SubType>

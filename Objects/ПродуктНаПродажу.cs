@@ -32,16 +32,23 @@ namespace IIS.АСУ_Кондитерская
     [View("ПродуктНаПродажуE", new string[] {
             "Продукт as \'Продукт\'",
             "Продукт.Наименование as \'Наименование\'",
-            "Количество as \'Количество\'",
-            "ДатаИзг as \'Дата изготовления\'"}, Hidden=new string[] {
-            "Продукт.Наименование"})]
+            "Поступило as \'Поступило\'",
+            "Осталось as \'Осталось\'",
+            "ДатаИзг as \'Дата изготовления\'",
+            "ДатаУничтожения"}, Hidden=new string[] {
+            "Продукт.Наименование",
+            "ДатаУничтожения"})]
     [MasterViewDefineAttribute("ПродуктНаПродажуE", "Продукт", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Наименование")]
     public class ПродуктНаПродажу : ICSSoft.STORMNET.DataObject
     {
         
         private System.DateTime fДатаИзг;
         
-        private int fКоличество;
+        private int fПоступило;
+        
+        private int fОсталось;
+        
+        private System.DateTime? fДатаУничтожения;
         
         private IIS.АСУ_Кондитерская.Продукт fПродукт;
         
@@ -84,34 +91,95 @@ namespace IIS.АСУ_Кондитерская
         }
         
         /// <summary>
-        /// Количество.
+        /// Поступило.
         /// </summary>
-        // *** Start programmer edit section *** (ПродуктНаПродажу.Количество CustomAttributes)
+        // *** Start programmer edit section *** (ПродуктНаПродажу.Поступило CustomAttributes)
 
-        // *** End programmer edit section *** (ПродуктНаПродажу.Количество CustomAttributes)
-        [NotNull()]
-        public virtual int Количество
+        // *** End programmer edit section *** (ПродуктНаПродажу.Поступило CustomAttributes)
+        public virtual int Поступило
         {
             get
             {
-                // *** Start programmer edit section *** (ПродуктНаПродажу.Количество Get start)
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Поступило Get start)
 
-                // *** End programmer edit section *** (ПродуктНаПродажу.Количество Get start)
-                int result = this.fКоличество;
-                // *** Start programmer edit section *** (ПродуктНаПродажу.Количество Get end)
+                // *** End programmer edit section *** (ПродуктНаПродажу.Поступило Get start)
+                int result = this.fПоступило;
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Поступило Get end)
 
-                // *** End programmer edit section *** (ПродуктНаПродажу.Количество Get end)
+                // *** End programmer edit section *** (ПродуктНаПродажу.Поступило Get end)
                 return result;
             }
             set
             {
-                // *** Start programmer edit section *** (ПродуктНаПродажу.Количество Set start)
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Поступило Set start)
 
-                // *** End programmer edit section *** (ПродуктНаПродажу.Количество Set start)
-                this.fКоличество = value;
-                // *** Start programmer edit section *** (ПродуктНаПродажу.Количество Set end)
+                // *** End programmer edit section *** (ПродуктНаПродажу.Поступило Set start)
+                this.fПоступило = value;
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Поступило Set end)
 
-                // *** End programmer edit section *** (ПродуктНаПродажу.Количество Set end)
+                // *** End programmer edit section *** (ПродуктНаПродажу.Поступило Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Осталось.
+        /// </summary>
+        // *** Start programmer edit section *** (ПродуктНаПродажу.Осталось CustomAttributes)
+
+        // *** End programmer edit section *** (ПродуктНаПродажу.Осталось CustomAttributes)
+        public virtual int Осталось
+        {
+            get
+            {
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Осталось Get start)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.Осталось Get start)
+                int result = this.fОсталось;
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Осталось Get end)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.Осталось Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Осталось Set start)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.Осталось Set start)
+                this.fОсталось = value;
+                // *** Start programmer edit section *** (ПродуктНаПродажу.Осталось Set end)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.Осталось Set end)
+            }
+        }
+        
+        /// <summary>
+        /// ДатаУничтожения.
+        /// </summary>
+        // *** Start programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения CustomAttributes)
+
+        // *** End programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения CustomAttributes)
+        public virtual System.DateTime? ДатаУничтожения
+        {
+            get
+            {
+                // *** Start programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Get start)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Get start)
+                System.DateTime? result = this.fДатаУничтожения;
+                // *** Start programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Get end)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Set start)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Set start)
+                this.fДатаУничтожения = value;
+                // *** Start programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Set end)
+
+                // *** End programmer edit section *** (ПродуктНаПродажу.ДатаУничтожения Set end)
             }
         }
         

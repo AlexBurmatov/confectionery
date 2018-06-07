@@ -11,17 +11,16 @@
 namespace IIS.АСУ_Кондитерская
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using System.Collections.Generic;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -115,7 +114,7 @@ namespace IIS.АСУ_Кондитерская
                             var sale_product = new ПродуктНаПродажу()
                             {
                                 ДатаИзг = ((ГотовыйПродукт)complete_products[i]).ДатаИзг,
-                                Количество = req_count,
+                                Поступило = req_count,
                                 ТорговаяТочка = UpdatedObject.ТорговаяТочка,
                                 Продукт = ((СтрокаЗаказа)point).Продукт
                             };
@@ -136,7 +135,7 @@ namespace IIS.АСУ_Кондитерская
                             var sale_product = new ПродуктНаПродажу()
                             {
                                 ДатаИзг = ((ГотовыйПродукт)complete_products[i]).ДатаИзг,
-                                Количество = sklad_count,
+                                Поступило = sklad_count,
                                 ТорговаяТочка = UpdatedObject.ТорговаяТочка,
                                 Продукт = ((СтрокаЗаказа)point).Продукт
                             };

@@ -19,6 +19,8 @@ namespace IIS.АСУ_Кондитерская
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using ICSSoft.STORMNET.Windows.Forms;
+
     // *** End programmer edit section *** (Using statements)
 
 
@@ -56,8 +58,6 @@ namespace IIS.АСУ_Кондитерская
         private IIS.АСУ_Кондитерская.Цех fЦех;
         
         private IIS.АСУ_Кондитерская.DetailArrayOfПродуктНаПродажу fПродуктНаПродажу;
-        
-        private IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт fУничтоженныйПродукт;
         
         // *** Start programmer edit section *** (ТорговаяТочка CustomMembers)
 
@@ -141,39 +141,39 @@ namespace IIS.АСУ_Кондитерская
             get
             {
                 // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
+
                 IDataService ds = DataServiceProvider.DataService;
-                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(УничтоженныйПродукт),"УничтоженныйПродуктE");
-                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
-                lcs.LimitFunction = ld.GetFunction(ld.funcEQ, 
-                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<УничтоженныйПродукт>(r => r.ТорговаяТочка)), 
-                    this.__PrimaryKey);
-                var dobjs = ds.LoadObjects(lcs);
+                View view = IIS.АСУ_Кондитерская.ПродуктНаПродажу.Views.ПродуктНаПродажуE;
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(ПродуктНаПродажу), view);
+                ExternalLangDef ld = ExternalLangDef.LanguageDef;
+                
+                var dvd = new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", view, "ТорговаяТочка", null);
+                var dvd2 = new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", view, "ТорговаяТочка", null);
 
-                int count_util = 0;
-                foreach(УничтоженныйПродукт util in dobjs)
-                {
-                    count_util += util.Количество;
-                }
+                Function поступило_lim = ld.GetFunction(ld.funcSumWithLimit,
+                            dvd2, new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Поступило)),
+                            ld.GetFunction(ld.funcEQ,
+                                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
+                                this.__PrimaryKey));
+                Function уничтожено_lim = ld.GetFunction(ld.funcSumWithLimit,
+                            dvd, new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Осталось)),
+                            ld.GetFunction(ld.funcAND,
+                                ld.GetFunction(ld.funcEQ,
+                                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
+                                    this.__PrimaryKey),
+                                ld.GetFunction(ld.funcNotIsNull,
+                                    new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ДатаУничтожения)))));
 
-                lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Заказ), "ЗаказE");
-                lcs.LimitFunction = ld.GetFunction(ld.funcAND,
-                    ld.GetFunction(ld.funcEQ,
-                        new VariableDef(ld.StringType, Information.ExtractPropertyPath<Заказ>(r => r.Состояние)),
-                        "Выполненный"),
-                    ld.GetFunction(ld.funcEQ,
-                        new VariableDef(ld.GuidType, Information.ExtractPropertyPath<Заказ>(r => r.ТорговаяТочка)),
-                        this.__PrimaryKey));
-                var orders = ds.LoadObjects(lcs);
+                Function lf = ld.GetFunction(ld.funcG, 
+                    new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Поступило)),
+                    //ld.GetFunction(ld.funcSub, уничтожено_lim, поступило_lim));
+                    8);
 
-                int count_total = 0;
-                foreach (Заказ order in orders)
-                {
-                    count_total += order.СтрокаЗаказа.CountProduct();
-                }
-                if (count_total != 0)
-                    return 100-Math.Round((1.0)*count_util / count_total * 100);
-                else
-                    return -1;
+
+                lcs.LimitFunction = lf;
+                var dobjs = ds.LoadObjects(lcs);                
+                
+                return -1;
                 // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
             }
             set
@@ -183,14 +183,14 @@ namespace IIS.АСУ_Кондитерская
                 // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
             }
         }
-        
-        /// <summary>
-        /// Торговая точка.
-        /// </summary>
-        // *** Start programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
 
-        // *** End programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
-        [PropertyStorage(new string[] {
+/// <summary>
+/// Торговая точка.
+/// </summary>
+// *** Start programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
+
+// *** End programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
+[PropertyStorage(new string[] {
                 "Цех"})]
         [NotNull()]
         public virtual IIS.АСУ_Кондитерская.Цех Цех
@@ -250,41 +250,6 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (ТорговаяТочка.ПродуктНаПродажу Set end)
 
                 // *** End programmer edit section *** (ТорговаяТочка.ПродуктНаПродажу Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Торговая точка.
-        /// </summary>
-        // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт CustomAttributes)
-
-        // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт CustomAttributes)
-        public virtual IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт УничтоженныйПродукт
-        {
-            get
-            {
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get start)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get start)
-                if ((this.fУничтоженныйПродукт == null))
-                {
-                    this.fУничтоженныйПродукт = new IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт(this);
-                }
-                IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт result = this.fУничтоженныйПродукт;
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get end)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set start)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set start)
-                this.fУничтоженныйПродукт = value;
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set end)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set end)
             }
         }
         
