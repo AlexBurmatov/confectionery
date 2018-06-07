@@ -164,10 +164,9 @@ namespace IIS.АСУ_Кондитерская
                                 ld.GetFunction(ld.funcNotIsNull,
                                     new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ДатаУничтожения)))));
 
-                Function lf = ld.GetFunction(ld.funcG, 
+                Function lf = ld.GetFunction(ld.func, 
                     new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Поступило)),
-                    //ld.GetFunction(ld.funcSub, уничтожено_lim, поступило_lim));
-                    8);
+                    ld.GetFunction(ld.funcSub, уничтожено_lim, поступило_lim));
 
 
                 lcs.LimitFunction = lf;
