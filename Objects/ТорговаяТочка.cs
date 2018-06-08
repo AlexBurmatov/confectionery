@@ -60,7 +60,7 @@ namespace IIS.АСУ_Кондитерская
         private IIS.АСУ_Кондитерская.DetailArrayOfПродуктНаПродажу fПродуктНаПродажу;
         
         // *** Start programmer edit section *** (ТорговаяТочка CustomMembers)
-
+        private double? koeff = null;
         // *** End programmer edit section *** (ТорговаяТочка CustomMembers)
 
         
@@ -136,60 +136,38 @@ namespace IIS.АСУ_Кондитерская
 
         // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх CustomAttributes)
         [ICSSoft.STORMNET.NotStored()]
-        public virtual double КоэффБезотх
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), @"select 100-CAST(уничтожено.num as float)/поступило.num*100
+from
+(SELECT sum(прод.Поступило) num
+FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
+WHERE прод.ТорговаяТочка = StormMainObjectKey ) as поступило,
+(SELECT sum(прод.Осталось) num
+FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
+WHERE прод.ТорговаяТочка = StormMainObjectKey  AND прод.ДатаУничтожения IS NOT NULL) as уничтожено")]
+        public virtual double? КоэффБезотх
         {
             get
             {
                 // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
-
-                IDataService ds = DataServiceProvider.DataService;
-                View view = IIS.АСУ_Кондитерская.ПродуктНаПродажу.Views.ПродуктНаПродажуE;
-                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(ПродуктНаПродажу), view);
-                ExternalLangDef ld = ExternalLangDef.LanguageDef;
                 
-                var dvd = new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", view, "ТорговаяТочка", null);
-                var dvd2 = new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", view, "ТорговаяТочка", null);
-
-                Function поступило_lim = ld.GetFunction(ld.funcSumWithLimit,
-                            dvd2, new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Поступило)),
-                            ld.GetFunction(ld.funcEQ,
-                                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
-                                this.__PrimaryKey));
-                Function уничтожено_lim = ld.GetFunction(ld.funcSumWithLimit,
-                            dvd, new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Осталось)),
-                            ld.GetFunction(ld.funcAND,
-                                ld.GetFunction(ld.funcEQ,
-                                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
-                                    this.__PrimaryKey),
-                                ld.GetFunction(ld.funcNotIsNull,
-                                    new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ДатаУничтожения)))));
-
-                Function lf = ld.GetFunction(ld.func, 
-                    new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.Поступило)),
-                    ld.GetFunction(ld.funcSub, уничтожено_lim, поступило_lim));
-
-
-                lcs.LimitFunction = lf;
-                var dobjs = ds.LoadObjects(lcs);                
-                
-                return -1;
+                return koeff;
                 // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
             }
             set
             {
                 // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
-
+                koeff = value;
                 // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
             }
         }
+        
+        /// <summary>
+        /// Торговая точка.
+        /// </summary>
+        // *** Start programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
 
-/// <summary>
-/// Торговая точка.
-/// </summary>
-// *** Start programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
-
-// *** End programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
-[PropertyStorage(new string[] {
+        // *** End programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
+        [PropertyStorage(new string[] {
                 "Цех"})]
         [NotNull()]
         public virtual IIS.АСУ_Кондитерская.Цех Цех

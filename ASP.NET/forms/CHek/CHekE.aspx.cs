@@ -12,6 +12,7 @@ namespace IIS.АСУ_Кондитерская
     using ICSSoft.STORMNET.Business.LINQProvider;
     using ICSSoft.STORMNET.Windows.Forms;
     using ICSSoft.STORMNET.Web.Tools.WGEFeatures;
+    using System;
 
     public partial class ЧекE : BaseEditForm<Чек>
     {
@@ -43,6 +44,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PreApplyToControls()
         {
+            ExternalLangDef ld = ExternalLangDef.LanguageDef;
             if (Context.User.IsInRole("Продавец"))
             {
                 if (this.DataObject == null)
@@ -50,32 +52,48 @@ namespace IIS.АСУ_Кондитерская
                     // Определяем текущего пользователя
                     var currentUser = Context.User.Identity.Name;
                     IDataService ds = DataServiceProvider.DataService;
-                    var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
-                    SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
+                    var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");                    
                     lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
                         new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
                     var manager = ds.LoadObjects(lcs)[0] as Продавец;
 
                     // Устанавливаем текущего продавца в поле заказа
-                    this.DataObject = new Чек();
-                    this.DataObject.Продавец = manager;
-                    this.DataObject.ТорговаяТочка = manager.ТорговаяТочка;
+                    NewPlatform.Flexberry.Orm.KeyGen.SystemGuidGenerator generator = new NewPlatform.Flexberry.Orm.KeyGen.SystemGuidGenerator();
+                    this.DataObject = new Чек()
+                    {
+                        //__PrimaryKey = generator.Generate(typeof(Чек)),
+                        Продавец = manager,
+                        ТорговаяТочка = manager.ТорговаяТочка
+                    };
+                    
 
                     // Фильтруем список индивидуальных заказов в соотв. с торговой точкой, на которой работает текущий продавец
-                    IQueryable<ИндивидуальныйЗаказ> limit =
-                        ds.Query<ИндивидуальныйЗаказ>(ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).Where(order =>
-                        order.ТорговаяТочка.__PrimaryKey.Equals(manager.ТорговаяТочка.__PrimaryKey) && order.Состояние.Equals("Выполненный"));
-                    Function limitfunc = LinqToLcs.GetLcs(limit.Expression, ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE).LimitFunction;
-
                     ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
-                    ctrlИндивидуальныйЗаказ.LimitFunction = limitfunc;
+                    ctrlИндивидуальныйЗаказ.LimitFunction = ld.GetFunction(ld.funcAND,
+                        ld.GetFunction(ld.funcEQ,
+                            new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ИндивидуальныйЗаказ>(order => order.ТорговаяТочка)),
+                            manager.ТорговаяТочка.__PrimaryKey),
+                        ld.GetFunction(ld.funcEQ,
+                            new VariableDef(ld.StringType, Information.ExtractPropertyPath<ИндивидуальныйЗаказ>(order => order.Состояние)),
+                            EnumCaption.GetCaptionFor(СостояниеЗаказа.Выполненный)));                
                 }
+                // отображаем в возможных позициях в чеке только те продукты, которые есть в продаже на этой торговой точке
+                ctrlПозицияВЧеке.AddLookUpSettings(Information.ExtractPropertyPath<ПозицияВЧеке>(r => r.Продукт), new LookUpSetting()
+                {
+                    LimitFunction = ld.GetFunction(ld.funcExist,
+                        new DetailVariableDef(ld.GetObjectType("Details"),"ПродуктНаПродажу", ПродуктНаПродажу.Views.ПродуктНаПродажуE, "Продукт", null),
+                        ld.GetFunction(ld.funcEQ,
+                            new VariableDef(ld.StringType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
+                            this.DataObject.ТорговаяТочка.__PrimaryKey)),
+                    ColumnsSort = new ColumnsSortDef[] { new ColumnsSortDef("Код", SortOrder.Asc) }
+                });
                 ctrlПродавец.Enabled = false;
                 ctrlТорговаяТочка.Enabled = false;
-                ctrlИндивидуальныйЗаказ.Enabled = false;
+                /*ctrlИндивидуальныйЗаказ.Enabled = false;
                 if (this.DataObject.GetStatus() == ObjectStatus.Created)
-                    ctrlИндивидуальныйЗаказ.Enabled = true;
+                    ctrlИндивидуальныйЗаказ.Enabled = true;*/
             }
+            
         }
 
         /// <summary>
@@ -84,7 +102,34 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PostApplyToControls()
         {
-            Page.Validate();            
+            Page.Validate();
+            string postbackControl = Page.Request.Params.Get("__EVENTTARGET");
+            if (Page.IsPostBack && postbackControl == ctrlИндивидуальныйЗаказ.ControlToEditClientID)
+            {
+                ExternalLangDef ld = ExternalLangDef.LanguageDef;                
+                if (this.DataObject.ИндивидуальныйЗаказ != null)
+                {
+                    IDataService ds = DataServiceProvider.DataService;
+                    var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(СтрокаЗаказа), "СтрокаЗаказаE");
+                    lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                        new VariableDef(ld.GuidType, Information.ExtractPropertyPath<СтрокаЗаказа>(str => str.Заказ)),
+                        this.DataObject.ИндивидуальныйЗаказ.__PrimaryKey);
+                    var orderPoints = ds.LoadObjects(lcs);
+
+                    foreach (СтрокаЗаказа str in orderPoints)
+                    {
+                        var chekPos = new ПозицияВЧеке()
+                        {
+                            Чек = this.DataObject,
+                            Количество = str.Количество,
+                            Продукт = str.Продукт
+                        };
+                        ds.UpdateObject(chekPos);
+                    }
+                    DataObject.SetStatus(ObjectStatus.Altered);
+                    Response.Redirect(Request.Url.AbsoluteUri);
+                }
+            }
         }
 
         /// <summary>

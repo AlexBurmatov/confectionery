@@ -12,12 +12,14 @@ namespace IIS.АСУ_Кондитерская
 {
     using System;
     using System.Xml;
+
+
+
+    // *** Start programmer edit section *** (Using statements)
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET;
-    
-    
-    // *** Start programmer edit section *** (Using statements)
-
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using ICSSoft.STORMNET.FunctionalLanguage;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -127,7 +129,23 @@ namespace IIS.АСУ_Кондитерская
             get
             {
                 // *** Start programmer edit section *** (Чек.Сумма Get)
-                return 0;
+                double sum = 0;
+                IDataService ds = DataServiceProvider.DataService;
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(ПозицияВЧеке), "ПозицияВЧекеE");
+                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
+
+                lcs.InitDataCopy = false;
+                lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПозицияВЧеке>(x => x.Чек)), this.__PrimaryKey);
+                var details = ds.LoadObjects(lcs);
+
+                foreach (ПозицияВЧеке det in details)
+                {
+                    ds.LoadObject(det.Продукт);
+                    sum += det.Продукт.Цена * det.Количество;
+                }
+
+                return sum;
                 // *** End programmer edit section *** (Чек.Сумма Get)
             }
             set

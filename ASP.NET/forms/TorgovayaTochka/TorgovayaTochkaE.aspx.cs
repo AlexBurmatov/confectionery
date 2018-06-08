@@ -9,6 +9,7 @@ namespace IIS.АСУ_Кондитерская
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using System;
+    using ICSSoft.STORMNET.Windows.Forms;
 
     public partial class ТорговаяТочкаE : BaseEditForm<ТорговаяТочка>
     {
@@ -41,13 +42,13 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void PreApplyToControls()
         {
+            IDataService ds = DataServiceProvider.DataService;
+            ExternalLangDef ld = ExternalLangDef.LanguageDef;
             if (Context.User.IsInRole("Продавец"))
             {
                 // Определяем текущего пользователя
-                var currentUser = Context.User.Identity.Name;
-                IDataService ds = DataServiceProvider.DataService;
+                var currentUser = Context.User.Identity.Name;                
                 var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
-                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
                 lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
                     new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
                 var manager = ds.LoadObjects(lcs)[0] as Продавец;
@@ -60,6 +61,11 @@ namespace IIS.АСУ_Кондитерская
                 // Для продавца устанавливаем по умолчанию торговую точку, на которой он работает
                 this.DataObject = shop;
             }
+            Function lf = ld.GetFunction(ld.funcL, new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.Поступило)), 1);
+            ctrlПродуктНаПродажу.AddLookUpSettings(Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.Поступило), new ICSSoft.STORMNET.Web.Tools.WGEFeatures.LookUpSetting
+            {
+                LimitFunction = lf
+            });
         }
 
         /// <summary>
@@ -103,7 +109,7 @@ namespace IIS.АСУ_Кондитерская
             {
                 ds.LoadObject(saleProduct.Продукт);
                 var period = System.DateTime.Now - saleProduct.ДатаИзг;
-                if (period.TotalHours > saleProduct.Продукт.СрокГодности)
+                if (period.TotalHours > saleProduct.Продукт.СрокГодности && saleProduct.ДатаУничтожения == null)
                 {
                     saleProduct.ДатаУничтожения = DateTime.Now;
                     ds.UpdateObject(saleProduct);

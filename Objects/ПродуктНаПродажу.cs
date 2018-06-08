@@ -35,9 +35,11 @@ namespace IIS.АСУ_Кондитерская
             "Поступило as \'Поступило\'",
             "Осталось as \'Осталось\'",
             "ДатаИзг as \'Дата изготовления\'",
-            "ДатаУничтожения"}, Hidden=new string[] {
+            "ДатаУничтожения",
+            "ТорговаяТочка"}, Hidden=new string[] {
             "Продукт.Наименование",
-            "ДатаУничтожения"})]
+            "ДатаУничтожения",
+            "ТорговаяТочка"})]
     [MasterViewDefineAttribute("ПродуктНаПродажуE", "Продукт", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Наименование")]
     public class ПродуктНаПродажу : ICSSoft.STORMNET.DataObject
     {

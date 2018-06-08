@@ -33,8 +33,9 @@ namespace IIS.АСУ_Кондитерская
             "Продукт as \'Продукт\'",
             "Продукт.Наименование as \'Наименование\'",
             "Количество as \'Количество\'",
-            "Сумма as \'Сумма\'"}, Hidden=new string[] {
-            "Продукт.Наименование"})]
+            "Чек"}, Hidden=new string[] {
+            "Продукт.Наименование",
+            "Чек"})]
     [MasterViewDefineAttribute("ПозицияВЧекеE", "Продукт", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Наименование")]
     public class ПозицияВЧеке : ICSSoft.STORMNET.DataObject
     {
@@ -79,29 +80,6 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (ПозицияВЧеке.Количество Set end)
 
                 // *** End programmer edit section *** (ПозицияВЧеке.Количество Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Сумма.
-        /// </summary>
-        // *** Start programmer edit section *** (ПозицияВЧеке.Сумма CustomAttributes)
-
-        // *** End programmer edit section *** (ПозицияВЧеке.Сумма CustomAttributes)
-        [ICSSoft.STORMNET.NotStored()]
-        public virtual double Сумма
-        {
-            get
-            {
-                // *** Start programmer edit section *** (ПозицияВЧеке.Сумма Get)
-                return 0;
-                // *** End programmer edit section *** (ПозицияВЧеке.Сумма Get)
-            }
-            set
-            {
-                // *** Start programmer edit section *** (ПозицияВЧеке.Сумма Set)
-
-                // *** End programmer edit section *** (ПозицияВЧеке.Сумма Set)
             }
         }
         

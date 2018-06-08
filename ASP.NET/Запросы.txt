@@ -1,0 +1,24 @@
+﻿// продукты с максимальной прибылью
+select строка.Продукт_m0, sum(строка.Количество*Продукт.Цена) Прибыль
+from СтрокаЗаказа строка left join Продукт on строка.Продукт_m0 = Продукт.primaryKey
+group by строка.Продукт_m0
+order by 2
+
+// мощность цеха
+select everyday.Продукт,max(everyday.summa) maximum
+from
+(select Продукт, ДатаИзг, sum(прод.Выпущено) summa
+from ГотовыйПродукт прод
+group by прод.Продукт, прод.ДатаИзг) as everyday
+group by everyday.Продукт
+
+// процент испорченной продукции
+select 100-CAST(уничтожено.num as float)/поступило.num*100
+from
+(SELECT sum(прод.Поступило) num
+FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
+WHERE прод.ТорговаяТочка = StormMainObjectKey ) as поступило,
+(SELECT sum(прод.Осталось) num
+FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
+WHERE прод.ТорговаяТочка = StormMainObjectKey  AND прод.ДатаУничтожения IS NOT NULL) as уничтожено
+
