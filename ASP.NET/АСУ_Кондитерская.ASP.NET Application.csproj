@@ -910,6 +910,7 @@
     <Content Include="Xml\WebControlProvider.xsd" />
     <Content Include="Xml\Bindings\ExampleE.xml" />
     <Content Include="Xml\Sitemaps\Empty.sitemap" />
+    <Content Include="App_Themes\BaseTheme\Pages\MainPage\Images\app-logo.png" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
