@@ -180,7 +180,16 @@ namespace IIS.АСУ_Кондитерская
     {
         
         // *** Start programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfСтрокаЗаказа members)
-
+        [AggregationFunction(null,"Количество")]
+        public int CountProduct()
+        {
+            int count = 0;
+            foreach(СтрокаЗаказа x in this)
+            {
+                count += x.Количество;
+            }
+            return count;
+        }
         // *** End programmer edit section *** (IIS.АСУ_Кондитерская.DetailArrayOfСтрокаЗаказа members)
 
         

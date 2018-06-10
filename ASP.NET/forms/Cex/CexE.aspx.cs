@@ -30,6 +30,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Preload()
         {
+
         }
 
         /// <summary>
@@ -40,8 +41,7 @@ namespace IIS.АСУ_Кондитерская
             var ds = DataServiceProvider.DataService;
             var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Цех), "ЦехE");
             var objs = ds.LoadObjects(lcs);
-            if (objs.Length != 0) 
-                this.DataObject = (Цех)objs[0];
+            this.DataObject = (Цех)objs[0];
         }
 
         /// <summary>

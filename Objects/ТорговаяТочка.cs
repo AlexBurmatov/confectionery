@@ -16,6 +16,10 @@ namespace IIS.АСУ_Кондитерская
     
     
     // *** Start programmer edit section *** (Using statements)
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using ICSSoft.STORMNET.Windows.Forms;
 
     // *** End programmer edit section *** (Using statements)
 
@@ -40,7 +44,8 @@ namespace IIS.АСУ_Кондитерская
     [MasterViewDefineAttribute("ТорговаяТочкаE", "Цех", ICSSoft.STORMNET.LookupTypeEnum.Combo, "", "Адрес")]
     [View("ТорговаяТочкаL", new string[] {
             "Номер as \'Номер\'",
-            "Адрес as \'Адрес\'"})]
+            "Адрес as \'Адрес\'",
+            "КоэффБезотх as \'Безотходность (%)\'"})]
     [AssociatedDetailViewAttribute("ТорговаяТочкаL", "ПродуктНаПродажу", "ПродуктНаПродажуE", true, "", "Продукт на продажу", true, new string[] {
             ""})]
     public class ТорговаяТочка : ICSSoft.STORMNET.DataObject
@@ -54,10 +59,8 @@ namespace IIS.АСУ_Кондитерская
         
         private IIS.АСУ_Кондитерская.DetailArrayOfПродуктНаПродажу fПродуктНаПродажу;
         
-        private IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт fУничтоженныйПродукт;
-        
         // *** Start programmer edit section *** (ТорговаяТочка CustomMembers)
-
+        private double? koeff = null;
         // *** End programmer edit section *** (ТорговаяТочка CustomMembers)
 
         
@@ -127,6 +130,38 @@ namespace IIS.АСУ_Кондитерская
         }
         
         /// <summary>
+        /// КоэффБезотх.
+        /// </summary>
+        // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх CustomAttributes)
+
+        // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх CustomAttributes)
+        [ICSSoft.STORMNET.NotStored()]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), @"select 100-CAST(уничтожено.num as float)/поступило.num*100
+from
+(SELECT sum(прод.Поступило) num
+FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
+WHERE прод.ТорговаяТочка = StormMainObjectKey ) as поступило,
+(SELECT sum(прод.Осталось) num
+FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
+WHERE прод.ТорговаяТочка = StormMainObjectKey  AND прод.ДатаУничтожения IS NOT NULL) as уничтожено")]
+        public virtual double? КоэффБезотх
+        {
+            get
+            {
+                // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
+                
+                return koeff;
+                // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
+            }
+            set
+            {
+                // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
+                koeff = value;
+                // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Set)
+            }
+        }
+        
+        /// <summary>
         /// Торговая точка.
         /// </summary>
         // *** Start programmer edit section *** (ТорговаяТочка.Цех CustomAttributes)
@@ -192,41 +227,6 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (ТорговаяТочка.ПродуктНаПродажу Set end)
 
                 // *** End programmer edit section *** (ТорговаяТочка.ПродуктНаПродажу Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Торговая точка.
-        /// </summary>
-        // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт CustomAttributes)
-
-        // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт CustomAttributes)
-        public virtual IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт УничтоженныйПродукт
-        {
-            get
-            {
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get start)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get start)
-                if ((this.fУничтоженныйПродукт == null))
-                {
-                    this.fУничтоженныйПродукт = new IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт(this);
-                }
-                IIS.АСУ_Кондитерская.DetailArrayOfУничтоженныйПродукт result = this.fУничтоженныйПродукт;
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get end)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set start)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set start)
-                this.fУничтоженныйПродукт = value;
-                // *** Start programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set end)
-
-                // *** End programmer edit section *** (ТорговаяТочка.УничтоженныйПродукт Set end)
             }
         }
         

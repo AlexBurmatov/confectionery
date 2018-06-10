@@ -28,7 +28,7 @@
 
 </div>
 <div class="clearfix">
-  <asp:Label CssClass="descLbl" ID="ctrlКоличествоLabel" runat="server" Text="Количество продукции" EnableViewState="False">
+  <asp:Label CssClass="descLbl" ID="ctrlКоличествоLabel" runat="server" Text="Количество продукции на складе" EnableViewState="False">
 </asp:Label>
 <ac:AlphaNumericTextBox CssClass="descTxt" ID="ctrlКоличество" Type="Numeric" runat="server">
 </ac:AlphaNumericTextBox>

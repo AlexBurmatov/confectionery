@@ -31,6 +31,8 @@ namespace IIS.АСУ_Кондитерская
     [View("ПраздникE", new string[] {
             "Дата as \'Дата\'",
             "Название as \'Название\'"})]
+    [AssociatedDetailViewAttribute("ПраздникE", "ПродуктКПразднику", "ПродуктКПраздникуE", true, "", "Продукт к празднику", true, new string[] {
+            ""})]
     [View("ПраздникL", new string[] {
             "Дата as \'Дата\'",
             "Название as \'Название\'"})]
@@ -40,6 +42,8 @@ namespace IIS.АСУ_Кондитерская
         private System.DateTime fДата;
         
         private string fНазвание;
+        
+        private IIS.АСУ_Кондитерская.DetailArrayOfПродуктКПразднику fПродуктКПразднику;
         
         // *** Start programmer edit section *** (Праздник CustomMembers)
 
@@ -108,6 +112,41 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (Праздник.Название Set end)
 
                 // *** End programmer edit section *** (Праздник.Название Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Праздник.
+        /// </summary>
+        // *** Start programmer edit section *** (Праздник.ПродуктКПразднику CustomAttributes)
+
+        // *** End programmer edit section *** (Праздник.ПродуктКПразднику CustomAttributes)
+        public virtual IIS.АСУ_Кондитерская.DetailArrayOfПродуктКПразднику ПродуктКПразднику
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Праздник.ПродуктКПразднику Get start)
+
+                // *** End programmer edit section *** (Праздник.ПродуктКПразднику Get start)
+                if ((this.fПродуктКПразднику == null))
+                {
+                    this.fПродуктКПразднику = new IIS.АСУ_Кондитерская.DetailArrayOfПродуктКПразднику(this);
+                }
+                IIS.АСУ_Кондитерская.DetailArrayOfПродуктКПразднику result = this.fПродуктКПразднику;
+                // *** Start programmer edit section *** (Праздник.ПродуктКПразднику Get end)
+
+                // *** End programmer edit section *** (Праздник.ПродуктКПразднику Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Праздник.ПродуктКПразднику Set start)
+
+                // *** End programmer edit section *** (Праздник.ПродуктКПразднику Set start)
+                this.fПродуктКПразднику = value;
+                // *** Start programmer edit section *** (Праздник.ПродуктКПразднику Set end)
+
+                // *** End programmer edit section *** (Праздник.ПродуктКПразднику Set end)
             }
         }
         
