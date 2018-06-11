@@ -12,10 +12,15 @@ namespace IIS.АСУ_Кондитерская
 {
     using System;
     using System.Xml;
-    
-    
-    // *** Start programmer edit section *** (Using statements)
 
+
+    // *** Start programmer edit section *** (Using statements)
+    using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.Business.LINQProvider;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using System.Collections.Generic;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -28,20 +33,134 @@ namespace IIS.АСУ_Кондитерская
     [ICSSoft.STORMNET.AccessType(ICSSoft.STORMNET.AccessType.none)]
     public class ИндЗаказBS : ICSSoft.STORMNET.Business.BusinessServer
     {
-        
+
         // *** Start programmer edit section *** (ИндЗаказBS CustomMembers)
 
         // *** End programmer edit section *** (ИндЗаказBS CustomMembers)
 
-        
+
         // *** Start programmer edit section *** (OnUpdateИндивидуальныйЗаказ CustomAttributes)
 
         // *** End programmer edit section *** (OnUpdateИндивидуальныйЗаказ CustomAttributes)
         public virtual ICSSoft.STORMNET.DataObject[] OnUpdateИндивидуальныйЗаказ(IIS.АСУ_Кондитерская.ИндивидуальныйЗаказ UpdatedObject)
         {
             // *** Start programmer edit section *** (OnUpdateИндивидуальныйЗаказ)
+            if (UpdatedObject.IsAlteredProperty("Состояние") && UpdatedObject.Состояние == СостояниеЗаказа.Выполненный)
+            {
+                // 1) проверить, достаточно ли на складе продуктов для отправки в торговую точку
+                // 2) в случае успеха создать объекты ПродуктНаПродажу в торговой точке 
+                //    и осуществить декрементацию продуктов на складе
+                // 3) заблокировать изменение статуса
+
+                // ------------------------- ПРОВЕРКА -----------------------------
+                IDataService ds = DataService;
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(СтрокаЗаказа), "СтрокаЗаказаE");
+                SQLWhereLanguageDef ld = SQLWhereLanguageDef.LanguageDef;
+                lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<СтрокаЗаказа>(x => x.Заказ)), UpdatedObject.__PrimaryKey);
+                var order_points = ds.LoadObjects(lcs);
+
+                foreach (var point in order_points)
+                {
+                    var product_key = ((СтрокаЗаказа)point).Продукт.__PrimaryKey;
+
+                    // Загружаем требуемые продукты, которые хранятся на складе в цехе
+                    var lcs2 = LoadingCustomizationStruct.GetSimpleStruct(typeof(ГотовыйПродукт), "ГотовыйПродуктE");
+                    lcs2.LimitFunction = ld.GetFunction(ld.funcEQ,
+                        new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ГотовыйПродукт>(x => x.Продукт)), product_key);
+                    var complete_products = ds.LoadObjects(lcs2);
+
+                    // Посчитаем, сколько готовых продуктов (с разной датой изготовления) содержится на складе
+                    int total_count = 0;
+                    foreach (var comp_prod in complete_products)
+                    {
+                        total_count += ((ГотовыйПродукт)comp_prod).НаСкладе;
+                    }
+
+                    // Если продукции меньше, чем требуется в заказе, то кидаем исключение
+                    if (total_count < ((СтрокаЗаказа)point).Количество)
+                    {
+                        throw new Exception(((СтрокаЗаказа)point).Продукт.Наименование.ToString() + ". На складе - " + total_count.ToString() + ". Требуется - " +
+                            ((СтрокаЗаказа)point).Количество.ToString() + ". Перевод заказа в статус \"Выполненный\" невозможно.");
+                    }
+                }
+                // ------------------------- ПРОВЕРКА ЗАВЕРШЕНА -----------------------------
+
+                // --------------------- ОТПРАВКА ПРОДУКТОВ В ТОРГОВУЮ ТОЧКУ -----------------
+                List<DataObject> forupdate = new List<DataObject>();
+                foreach (var point in order_points)
+                {
+                    var product_key = ((СтрокаЗаказа)point).Продукт.__PrimaryKey;
+
+                    // Загружаем требуемые продукты, которые хранятся на складе в цехе
+                    var lcs2 = LoadingCustomizationStruct.GetSimpleStruct(typeof(ГотовыйПродукт), "ГотовыйПродуктE");
+                    lcs2.LimitFunction = ld.GetFunction(ld.funcAND,
+                        ld.GetFunction(ld.funcEQ,
+                        new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ГотовыйПродукт>(x => x.Продукт)), product_key),
+                        ld.GetFunction(ld.funcNEQ,
+                        new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ГотовыйПродукт>(x => x.НаСкладе)), 0));
+                    var complete_products = ds.LoadObjects(lcs2);
+
+                    // Отсортируем все продукты по дате изготовления и будем отправлять по мере "старения" продуктов
+                    Array.Sort(complete_products);
+                    int req_count = ((СтрокаЗаказа)point).Количество;   // требуемое в заказе количество продукта
+                    int i = 0;                                          // счетчик продукта в списке
+                    while (req_count != 0)
+                    {
+                        int sklad_count = ((ГотовыйПродукт)complete_products[i]).НаСкладе;
+                        if (req_count <= sklad_count)
+                        {
+                            // Создаем детейл для торговой точки
+                            var sale_product = new ПродуктНаПродажу()
+                            {
+                                ДатаИзг = ((ГотовыйПродукт)complete_products[i]).ДатаИзг,
+                                Поступило = req_count,
+                                Осталось = req_count,
+                                ТорговаяТочка = UpdatedObject.ТорговаяТочка,
+                                Продукт = ((СтрокаЗаказа)point).Продукт
+                            };
+                            sale_product.SetStatus(ObjectStatus.Created);
+
+                            // Обновляем инф-цию на складе
+                            ((ГотовыйПродукт)complete_products[i]).НаСкладе -= req_count;
+                            complete_products[i].SetStatus(ObjectStatus.Altered);
+
+                            req_count = 0;
+                            forupdate.Add(sale_product);
+                            forupdate.Add(((ГотовыйПродукт)complete_products[i]));
+
+                        }
+                        else // (req_count > sklad_count)
+                        {
+                            // Создаем детейл для торговой точки
+                            var sale_product = new ПродуктНаПродажу()
+                            {
+                                ДатаИзг = ((ГотовыйПродукт)complete_products[i]).ДатаИзг,
+                                Поступило = sklad_count,
+                                Осталось = req_count,
+                                ТорговаяТочка = UpdatedObject.ТорговаяТочка,
+                                Продукт = ((СтрокаЗаказа)point).Продукт
+                            };
+                            sale_product.SetStatus(ObjectStatus.Created);
+
+                            // Обновляем инф-цию на складе
+                            ((ГотовыйПродукт)complete_products[i]).НаСкладе = 0;
+                            complete_products[i].SetStatus(ObjectStatus.Altered);
+
+                            req_count -= sklad_count;
+                            forupdate.Add(sale_product);
+                            forupdate.Add(((ГотовыйПродукт)complete_products[i]));
+                        }
+                        // Переходим к следующему продукту (более свежему)
+                        i++;
+                    }
+                }
+                // --------------------- ПРОДУКТЫ ОТПРАВЛЕНЫ В ТОРГОВУЮ ТОЧКУ -----------------
+                UpdatedObject.ДатаПоступления = DateTime.Now;
+                return forupdate.ToArray();
+            }
             return new ICSSoft.STORMNET.DataObject[0];
             // *** End programmer edit section *** (OnUpdateИндивидуальныйЗаказ)
-        }
+        }        
     }
 }

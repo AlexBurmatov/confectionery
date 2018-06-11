@@ -61,11 +61,12 @@ namespace IIS.АСУ_Кондитерская
                 // Для продавца устанавливаем по умолчанию торговую точку, на которой он работает
                 this.DataObject = shop;
             }
-            Function lf = ld.GetFunction(ld.funcL, new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.Поступило)), 1);
-            ctrlПродуктНаПродажу.AddLookUpSettings(Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.Поступило), new ICSSoft.STORMNET.Web.Tools.WGEFeatures.LookUpSetting
+            //var dvd = new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", ПродуктНаПродажу.Views.ПродуктНаПродажуE, "ТорговаяТочка", null);
+            /*Function lf = ld.GetFunction(ld.funcIsNull,new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.ДатаУничтожения)));
+            ctrlПродуктНаПродажу.AddLookUpSettings(Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.ДатаУничтожения), new ICSSoft.STORMNET.Web.Tools.WGEFeatures.LookUpSetting
             {
                 LimitFunction = lf
-            });
+            });*/
         }
 
         /// <summary>

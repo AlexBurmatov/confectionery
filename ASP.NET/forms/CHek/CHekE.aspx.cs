@@ -52,7 +52,7 @@ namespace IIS.АСУ_Кондитерская
                     // Определяем текущего пользователя
                     var currentUser = Context.User.Identity.Name;
                     IDataService ds = DataServiceProvider.DataService;
-                    var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");                    
+                    var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Продавец), "ПродавецL");
                     lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
                         new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продавец>(x => x.Логин)), currentUser);
                     var manager = ds.LoadObjects(lcs)[0] as Продавец;
@@ -66,7 +66,6 @@ namespace IIS.АСУ_Кондитерская
                         ТорговаяТочка = manager.ТорговаяТочка
                     };
                     
-
                     // Фильтруем список индивидуальных заказов в соотв. с торговой точкой, на которой работает текущий продавец
                     ctrlИндивидуальныйЗаказ.MasterViewName = ИндивидуальныйЗаказ.Views.ИндивидуальныйЗаказE.Name;
                     ctrlИндивидуальныйЗаказ.LimitFunction = ld.GetFunction(ld.funcAND,
@@ -75,13 +74,13 @@ namespace IIS.АСУ_Кондитерская
                             manager.ТорговаяТочка.__PrimaryKey),
                         ld.GetFunction(ld.funcEQ,
                             new VariableDef(ld.StringType, Information.ExtractPropertyPath<ИндивидуальныйЗаказ>(order => order.Состояние)),
-                            EnumCaption.GetCaptionFor(СостояниеЗаказа.Выполненный)));                
+                            EnumCaption.GetCaptionFor(СостояниеЗаказа.Выполненный)));
                 }
                 // отображаем в возможных позициях в чеке только те продукты, которые есть в продаже на этой торговой точке
                 ctrlПозицияВЧеке.AddLookUpSettings(Information.ExtractPropertyPath<ПозицияВЧеке>(r => r.Продукт), new LookUpSetting()
                 {
                     LimitFunction = ld.GetFunction(ld.funcExist,
-                        new DetailVariableDef(ld.GetObjectType("Details"),"ПродуктНаПродажу", ПродуктНаПродажу.Views.ПродуктНаПродажуE, "Продукт", null),
+                        new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", ПродуктНаПродажу.Views.ПродуктНаПродажуE, "Продукт", null),
                         ld.GetFunction(ld.funcEQ,
                             new VariableDef(ld.StringType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
                             this.DataObject.ТорговаяТочка.__PrimaryKey)),
@@ -89,11 +88,10 @@ namespace IIS.АСУ_Кондитерская
                 });
                 ctrlПродавец.Enabled = false;
                 ctrlТорговаяТочка.Enabled = false;
-                /*ctrlИндивидуальныйЗаказ.Enabled = false;
+                ctrlИндивидуальныйЗаказ.Enabled = false;
                 if (this.DataObject.GetStatus() == ObjectStatus.Created)
-                    ctrlИндивидуальныйЗаказ.Enabled = true;*/
-            }
-            
+                    ctrlИндивидуальныйЗаказ.Enabled = true;
+            }          
         }
 
         /// <summary>
@@ -103,19 +101,25 @@ namespace IIS.АСУ_Кондитерская
         protected override void PostApplyToControls()
         {
             Page.Validate();
+            IDataService ds = DataServiceProvider.DataService;
+
             string postbackControl = Page.Request.Params.Get("__EVENTTARGET");
             if (Page.IsPostBack && postbackControl == ctrlИндивидуальныйЗаказ.ControlToEditClientID)
             {
-                ExternalLangDef ld = ExternalLangDef.LanguageDef;                
+                //ExternalLangDef ld = ExternalLangDef.LanguageDef;
                 if (this.DataObject.ИндивидуальныйЗаказ != null)
                 {
-                    IDataService ds = DataServiceProvider.DataService;
+                    DataObject.ДатаЗаполнения = DateTime.Now;
+                    DataObject.ПозицияВЧеке = null;
+                    ds.UpdateObject(DataObject);
+                    
+                    ExternalLangDef ld = ExternalLangDef.LanguageDef;
                     var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(СтрокаЗаказа), "СтрокаЗаказаE");
                     lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
                         new VariableDef(ld.GuidType, Information.ExtractPropertyPath<СтрокаЗаказа>(str => str.Заказ)),
                         this.DataObject.ИндивидуальныйЗаказ.__PrimaryKey);
                     var orderPoints = ds.LoadObjects(lcs);
-
+                    
                     foreach (СтрокаЗаказа str in orderPoints)
                     {
                         var chekPos = new ПозицияВЧеке()
@@ -126,8 +130,8 @@ namespace IIS.АСУ_Кондитерская
                         };
                         ds.UpdateObject(chekPos);
                     }
-                    DataObject.SetStatus(ObjectStatus.Altered);
-                    Response.Redirect(Request.Url.AbsoluteUri);
+                    DataObject.SetStatus(ObjectStatus.Altered);                    
+                    Response.Redirect(GetRedirectUrlAfterSave(DataObject));
                 }
             }
         }

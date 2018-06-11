@@ -12,9 +12,10 @@ namespace IIS.АСУ_Кондитерская
 {
     using System;
     using System.Xml;
-
-
-
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET;
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET;
@@ -63,7 +64,9 @@ namespace IIS.АСУ_Кондитерская
             "ИндивидуальныйЗаказ.ФИОЗаказчика as \'ФИО заказчика\'",
             "ТорговаяТочка.Адрес as \'Адрес торговой точки\'",
             "Продавец.Фамилия as \'Продавец\'",
-            "Примечание as \'Примечание\'"})]
+            "Примечание as \'Примечание\'",
+            "ТорговаяТочка"}, Hidden=new string[] {
+            "ТорговаяТочка"})]
     public class Чек : IIS.АСУ_Кондитерская.Документ
     {
         
@@ -71,9 +74,9 @@ namespace IIS.АСУ_Кондитерская
         
         private string fПримечание;
         
-        private IIS.АСУ_Кондитерская.Продавец fПродавец;
-        
         private IIS.АСУ_Кондитерская.ТорговаяТочка fТорговаяТочка;
+        
+        private IIS.АСУ_Кондитерская.Продавец fПродавец;
         
         private IIS.АСУ_Кондитерская.ИндивидуальныйЗаказ fИндивидуальныйЗаказ;
         
@@ -191,40 +194,6 @@ namespace IIS.АСУ_Кондитерская
         /// <summary>
         /// Чек.
         /// </summary>
-        // *** Start programmer edit section *** (Чек.Продавец CustomAttributes)
-
-        // *** End programmer edit section *** (Чек.Продавец CustomAttributes)
-        [PropertyStorage(new string[] {
-                "Продавец"})]
-        [NotNull()]
-        public virtual IIS.АСУ_Кондитерская.Продавец Продавец
-        {
-            get
-            {
-                // *** Start programmer edit section *** (Чек.Продавец Get start)
-
-                // *** End programmer edit section *** (Чек.Продавец Get start)
-                IIS.АСУ_Кондитерская.Продавец result = this.fПродавец;
-                // *** Start programmer edit section *** (Чек.Продавец Get end)
-
-                // *** End programmer edit section *** (Чек.Продавец Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (Чек.Продавец Set start)
-
-                // *** End programmer edit section *** (Чек.Продавец Set start)
-                this.fПродавец = value;
-                // *** Start programmer edit section *** (Чек.Продавец Set end)
-
-                // *** End programmer edit section *** (Чек.Продавец Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Чек.
-        /// </summary>
         // *** Start programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
 
         // *** End programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
@@ -253,6 +222,40 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (Чек.ТорговаяТочка Set end)
 
                 // *** End programmer edit section *** (Чек.ТорговаяТочка Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Чек.
+        /// </summary>
+        // *** Start programmer edit section *** (Чек.Продавец CustomAttributes)
+
+        // *** End programmer edit section *** (Чек.Продавец CustomAttributes)
+        [PropertyStorage(new string[] {
+                "Продавец"})]
+        [NotNull()]
+        public virtual IIS.АСУ_Кондитерская.Продавец Продавец
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Чек.Продавец Get start)
+
+                // *** End programmer edit section *** (Чек.Продавец Get start)
+                IIS.АСУ_Кондитерская.Продавец result = this.fПродавец;
+                // *** Start programmer edit section *** (Чек.Продавец Get end)
+
+                // *** End programmer edit section *** (Чек.Продавец Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Чек.Продавец Set start)
+
+                // *** End programmer edit section *** (Чек.Продавец Set start)
+                this.fПродавец = value;
+                // *** Start programmer edit section *** (Чек.Продавец Set end)
+
+                // *** End programmer edit section *** (Чек.Продавец Set end)
             }
         }
         

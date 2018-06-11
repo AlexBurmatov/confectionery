@@ -12,9 +12,16 @@ namespace IIS.АСУ_Кондитерская
 {
     using System;
     using System.Xml;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
+    using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.Business.LINQProvider;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using System.Collections.Generic;
+    using ICSSoft.STORMNET.Windows.Forms;
 
     // *** End programmer edit section *** (Using statements)
 
@@ -40,6 +47,110 @@ namespace IIS.АСУ_Кондитерская
         public virtual ICSSoft.STORMNET.DataObject[] OnUpdateЧек(IIS.АСУ_Кондитерская.Чек UpdatedObject)
         {
             // *** Start programmer edit section *** (OnUpdateЧек)
+            if (UpdatedObject.IsAlteredProperty("Состояние") && UpdatedObject.Состояние == СостояниеЧека.Закрытый)
+            {
+                // ------------------------- ПРОВЕРКА -----------------------------
+                IDataService ds = DataService;
+                var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(ПозицияВЧеке), "ПозицияВЧекеE");
+                ExternalLangDef ld = ExternalLangDef.LanguageDef;
+                lcs.LimitFunction = ld.GetFunction(ld.funcEQ,
+                    new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПозицияВЧеке>(x => x.Чек)), UpdatedObject.__PrimaryKey);
+                var chek_points = ds.LoadObjects(lcs);
+
+                foreach (var point in chek_points)
+                {
+                    var product_key = ((ПозицияВЧеке)point).Продукт.__PrimaryKey;
+
+                    // Загружаем требуемые продукты, которые хранятся в торговой точке
+                    var lcs2 = LoadingCustomizationStruct.GetSimpleStruct(typeof(ПродуктНаПродажу), "ПродуктНаПродажуE");
+                    lcs2.LimitFunction = ld.GetFunction(ld.funcAND,
+                        ld.GetFunction(ld.funcAND,
+                            ld.GetFunction(ld.funcEQ,
+                                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.ТорговаяТочка)), 
+                                UpdatedObject.ТорговаяТочка.__PrimaryKey),
+                            ld.GetFunction(ld.funcEQ,
+                                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.Продукт)),
+                                product_key)),
+                        ld.GetFunction(ld.funcIsNull,
+                            new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.ДатаУничтожения))));
+                    var sale_products = ds.LoadObjects(lcs2);
+
+                    // Посчитаем, сколько продуктов (с разной датой изготовления) осталось в торговой точке
+                    int total_count = 0;
+                    foreach (var sale_prod in sale_products)
+                    {
+                        total_count += ((ПродуктНаПродажу)sale_prod).Осталось;
+                    }
+
+                    // Если продукции меньше, чем требуется в заказе, то кидаем исключение
+                    if (total_count < ((ПозицияВЧеке)point).Количество)
+                    {
+                        throw new Exception(((ПозицияВЧеке)point).Продукт.Наименование.ToString() + ". Осталось - " + total_count.ToString() + ". Запрошено - " +
+                            ((ПозицияВЧеке)point).Количество.ToString() + ". Закрытие чека невозможно.");
+                    }
+                }
+                // ------------------------- ПРОВЕРКА ЗАВЕРШЕНА -----------------------------
+
+                // --------------------- ОТПРАВКА ПРОДУКТОВ В ТОРГОВУЮ ТОЧКУ -----------------
+                List<DataObject> forupdate = new List<DataObject>();
+                foreach (ПозицияВЧеке point in chek_points)
+                {
+                    var product_key = point.Продукт.__PrimaryKey;
+
+                    // Загружаем требуемые продукты, которые хранятся на складе в цехе
+                    var lcs2 = LoadingCustomizationStruct.GetSimpleStruct(typeof(ПродуктНаПродажу), "ПродуктНаПродажуE");
+                    lcs2.LimitFunction = ld.GetFunction(ld.funcAND,
+                        ld.GetFunction(ld.funcAND,
+                            ld.GetFunction(ld.funcEQ,
+                                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.Продукт)),
+                                product_key),
+                            ld.GetFunction(ld.funcNEQ,
+                                new VariableDef(ld.NumericType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.Осталось)),
+                                0)),
+                        ld.GetFunction(ld.funcAND,
+                            ld.GetFunction(ld.funcIsNull,
+                                new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.ДатаУничтожения))),
+                            ld.GetFunction(ld.funcEQ,
+                                new VariableDef(ld.GuidType, Information.ExtractPropertyPath<ПродуктНаПродажу>(x => x.ТорговаяТочка)),
+                                UpdatedObject.ТорговаяТочка.__PrimaryKey)));
+                    var sale_products = ds.LoadObjects(lcs2);
+
+                    // Отсортируем все продукты по дате изготовления и будем отправлять по мере "старения" продуктов
+                    Array.Sort(sale_products);
+                    int req_count = point.Количество;   // требуемое в чеке количество продукта
+                    int i = 0;                          // счетчик продукта в списке
+                    while (req_count != 0)
+                    {
+                        int sklad_count = ((ПродуктНаПродажу)sale_products[i]).Осталось;
+                        if (req_count <= sklad_count)
+                        {
+                            // Обновляем инф-цию на торговой точке
+                            ((ПродуктНаПродажу)sale_products[i]).Осталось -= req_count;
+                            sale_products[i].SetStatus(ObjectStatus.Altered);
+
+                            req_count = 0;
+                            forupdate.Add(((ПродуктНаПродажу)sale_products[i]));
+
+                        }
+                        else // (req_count > sklad_count)
+                        {
+                            // Обновляем инф-цию на торговой точке
+                            ((ПродуктНаПродажу)sale_products[i]).Осталось = 0;
+                            sale_products[i].SetStatus(ObjectStatus.Altered);
+
+                            req_count -= sklad_count;
+                            forupdate.Add(((ПродуктНаПродажу)sale_products[i]));
+                        }
+                        // Переходим к следующему продукту (более свежему)
+                        i++;
+                    }
+                }
+                // --------------------- ПРОДУКТЫ ОТПРАВЛЕНЫ В ТОРГОВУЮ ТОЧКУ -----------------                
+                ds.LoadObject(UpdatedObject.ИндивидуальныйЗаказ);
+                UpdatedObject.ИндивидуальныйЗаказ.Состояние = СостояниеЗаказа.Оплаченный;
+                ds.UpdateObject(UpdatedObject.ИндивидуальныйЗаказ);
+                return forupdate.ToArray();
+            }
             return new ICSSoft.STORMNET.DataObject[0];
             // *** End programmer edit section *** (OnUpdateЧек)
         }

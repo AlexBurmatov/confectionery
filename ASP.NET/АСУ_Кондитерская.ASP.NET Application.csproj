@@ -126,9 +126,6 @@
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging.Database">
       <HintPath>..\packages\EnterpriseLibrary.Logging.Database.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Logging.Database.dll</HintPath>
     </Reference>
-    <Reference Include="IIS.University.PKHelper, Version=1.4.0.0, Culture=neutral, PublicKeyToken=d8a331e0b60b65c9, processorArchitecture=MSIL">
-      <HintPath>..\packages\IIS.University.PKHelper.1.5.1\lib\net40\IIS.University.PKHelper.dll</HintPath>
-    </Reference>
     <Reference Include="ChangesToSqlBTMonitor">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
@@ -306,7 +303,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Themes\BlueSky\Pages\MainPage\Images\app-logo.png" />
+    <Content Include="forms\Reports\MaxProfit.aspx" />
+    <Content Include="forms\Reports\ShopPower.aspx" />
     <Content Include="forms\TorgovayaTochka\TorgovayaTochkaL.aspx" />
+    <Compile Include="forms\Reports\MaxProfit.aspx.cs">
+      <DependentUpon>MaxProfit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forms\Reports\MaxProfit.aspx.designer.cs">
+      <DependentUpon>MaxProfit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="forms\Reports\ShopPower.aspx.cs">
+      <DependentUpon>ShopPower.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="forms\Reports\ShopPower.aspx.designer.cs">
+      <DependentUpon>ShopPower.aspx</DependentUpon>
+    </Compile>
     <Compile Include="forms\TorgovayaTochka\TorgovayaTochkaL.aspx.cs">
       <DependentUpon>TorgovayaTochkaL.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

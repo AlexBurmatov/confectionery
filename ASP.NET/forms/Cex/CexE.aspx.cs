@@ -41,7 +41,15 @@ namespace IIS.АСУ_Кондитерская
             var ds = DataServiceProvider.DataService;
             var lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Цех), "ЦехE");
             var objs = ds.LoadObjects(lcs);
-            this.DataObject = (Цех)objs[0];
+            if (objs.Length!=0)
+            {
+                DataObject = (Цех)objs[0];
+            }
+            else
+            {
+                DataObject = new Цех() { Номер = 1, Адрес="ул. Пермская, 26" };
+                ds.UpdateObject(DataObject);
+            }
         }
 
         /// <summary>
