@@ -5,11 +5,12 @@ group by строка.Продукт_m0
 order by 2
 
 // мощность цеха
-select everyday.Продукт,max(everyday.summa) maximum
+select max(everyday.summa) maximum
 from
 (select Продукт, ДатаИзг, sum(прод.Выпущено) summa
 from ГотовыйПродукт прод
 group by прод.Продукт, прод.ДатаИзг) as everyday
+where everyday.Продукт = StormMainObjectKey
 group by everyday.Продукт
 
 // процент испорченной продукции

@@ -32,6 +32,7 @@ namespace IIS.АСУ_Кондитерская
     [View("ПозицияВЧекеE", new string[] {
             "Продукт as \'Продукт\'",
             "Продукт.Наименование as \'Наименование\'",
+            "Продукт.Цена as \'Цена\'",
             "Количество as \'Количество\'",
             "Чек"}, Hidden=new string[] {
             "Продукт.Наименование",
@@ -40,7 +41,7 @@ namespace IIS.АСУ_Кондитерская
     public class ПозицияВЧеке : ICSSoft.STORMNET.DataObject
     {
         
-        private int fКоличество;
+        private int fКоличество=1;
         
         private IIS.АСУ_Кондитерская.Продукт fПродукт;
         

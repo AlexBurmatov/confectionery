@@ -40,33 +40,6 @@ namespace IIS.АСУ_Кондитерская {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator ctrlСостояниеRequiredFieldValidator;
         
         /// <summary>
-        /// ctrlНомерLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ctrlНомерLabel;
-        
-        /// <summary>
-        /// ctrlНомер control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::ICSSoft.STORMNET.Web.AjaxControls.AlphaNumericTextBox ctrlНомер;
-        
-        /// <summary>
-        /// ctrlНомерRequiredFieldValidator control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator ctrlНомерRequiredFieldValidator;
-        
-        /// <summary>
         /// ctrlДатаЗаполненияLabel control.
         /// </summary>
         /// <remarks>

@@ -47,6 +47,7 @@ namespace IIS.АСУ_Кондитерская
             "Продавец as \'Продавец\'",
             "Продавец.ФИО",
             "Примечание as \'Примечание\'"}, Hidden=new string[] {
+            "Номер",
             "ИндивидуальныйЗаказ.ФИОЗаказчика",
             "ИндивидуальныйЗаказ.ТорговаяТочка",
             "ТорговаяТочка.Адрес",
@@ -74,9 +75,9 @@ namespace IIS.АСУ_Кондитерская
         
         private string fПримечание;
         
-        private IIS.АСУ_Кондитерская.ТорговаяТочка fТорговаяТочка;
-        
         private IIS.АСУ_Кондитерская.Продавец fПродавец;
+        
+        private IIS.АСУ_Кондитерская.ТорговаяТочка fТорговаяТочка;
         
         private IIS.АСУ_Кондитерская.ИндивидуальныйЗаказ fИндивидуальныйЗаказ;
         
@@ -194,40 +195,6 @@ namespace IIS.АСУ_Кондитерская
         /// <summary>
         /// Чек.
         /// </summary>
-        // *** Start programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
-
-        // *** End programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
-        [PropertyStorage(new string[] {
-                "ТорговаяТочка"})]
-        [NotNull()]
-        public virtual IIS.АСУ_Кондитерская.ТорговаяТочка ТорговаяТочка
-        {
-            get
-            {
-                // *** Start programmer edit section *** (Чек.ТорговаяТочка Get start)
-
-                // *** End programmer edit section *** (Чек.ТорговаяТочка Get start)
-                IIS.АСУ_Кондитерская.ТорговаяТочка result = this.fТорговаяТочка;
-                // *** Start programmer edit section *** (Чек.ТорговаяТочка Get end)
-
-                // *** End programmer edit section *** (Чек.ТорговаяТочка Get end)
-                return result;
-            }
-            set
-            {
-                // *** Start programmer edit section *** (Чек.ТорговаяТочка Set start)
-
-                // *** End programmer edit section *** (Чек.ТорговаяТочка Set start)
-                this.fТорговаяТочка = value;
-                // *** Start programmer edit section *** (Чек.ТорговаяТочка Set end)
-
-                // *** End programmer edit section *** (Чек.ТорговаяТочка Set end)
-            }
-        }
-        
-        /// <summary>
-        /// Чек.
-        /// </summary>
         // *** Start programmer edit section *** (Чек.Продавец CustomAttributes)
 
         // *** End programmer edit section *** (Чек.Продавец CustomAttributes)
@@ -256,6 +223,40 @@ namespace IIS.АСУ_Кондитерская
                 // *** Start programmer edit section *** (Чек.Продавец Set end)
 
                 // *** End programmer edit section *** (Чек.Продавец Set end)
+            }
+        }
+        
+        /// <summary>
+        /// Чек.
+        /// </summary>
+        // *** Start programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
+
+        // *** End programmer edit section *** (Чек.ТорговаяТочка CustomAttributes)
+        [PropertyStorage(new string[] {
+                "ТорговаяТочка"})]
+        [NotNull()]
+        public virtual IIS.АСУ_Кондитерская.ТорговаяТочка ТорговаяТочка
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Get start)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Get start)
+                IIS.АСУ_Кондитерская.ТорговаяТочка result = this.fТорговаяТочка;
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Get end)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Set start)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Set start)
+                this.fТорговаяТочка = value;
+                // *** Start programmer edit section *** (Чек.ТорговаяТочка Set end)
+
+                // *** End programmer edit section *** (Чек.ТорговаяТочка Set end)
             }
         }
         

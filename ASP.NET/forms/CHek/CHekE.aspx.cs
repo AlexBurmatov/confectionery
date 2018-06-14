@@ -85,12 +85,16 @@ namespace IIS.АСУ_Кондитерская
                             new VariableDef(ld.StringType, Information.ExtractPropertyPath<ПродуктНаПродажу>(r => r.ТорговаяТочка)),
                             this.DataObject.ТорговаяТочка.__PrimaryKey)),
                     ColumnsSort = new ColumnsSortDef[] { new ColumnsSortDef("Код", SortOrder.Asc) }
-                });
+                });                
                 ctrlПродавец.Enabled = false;
                 ctrlТорговаяТочка.Enabled = false;
                 ctrlИндивидуальныйЗаказ.Enabled = false;
                 if (this.DataObject.GetStatus() == ObjectStatus.Created)
                     ctrlИндивидуальныйЗаказ.Enabled = true;
+                if (DataObject.Состояние == СостояниеЧека.Закрытый)
+                {
+                    ctrlСостояние.Enabled = false;
+                }
             }          
         }
 
@@ -141,7 +145,7 @@ namespace IIS.АСУ_Кондитерская
         /// </summary>
         protected override void Postload()
         {
-
+            
         }
 
         /// <summary>

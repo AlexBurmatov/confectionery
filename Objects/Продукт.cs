@@ -44,6 +44,12 @@ namespace IIS.АСУ_Кондитерская
             "СрокГодности as \'Срок годности (ч)\'",
             "Статус as \'Статус\'",
             "Описание as \'Описание\'"})]
+    [View("ПродуктОтчет", new string[] {
+            "Код as \'Код\'",
+            "Наименование as \'Наименование\'",
+            "Цена as \'Цена\'",
+            "МаксПрибыль as \'Макс. прибыль\'",
+            "МаксВыпуск as \'Макс. выпуск\'"})]
     public class Продукт : ICSSoft.STORMNET.DataObject
     {
         
@@ -60,12 +66,12 @@ namespace IIS.АСУ_Кондитерская
         private IIS.АСУ_Кондитерская.СтатусПродукта fСтатус;
         
         private string fОписание;
-
+        
         // *** Start programmer edit section *** (Продукт CustomMembers)
 
         // *** End programmer edit section *** (Продукт CustomMembers)
 
-
+        
         /// <summary>
         /// Код.
         /// </summary>
@@ -292,6 +298,58 @@ namespace IIS.АСУ_Кондитерская
         }
         
         /// <summary>
+        /// МаксПрибыль.
+        /// </summary>
+        // *** Start programmer edit section *** (Продукт.МаксПрибыль CustomAttributes)
+
+        // *** End programmer edit section *** (Продукт.МаксПрибыль CustomAttributes)
+        [ICSSoft.STORMNET.NotStored()]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), "select sum(строка.Количество*Продукт.Цена) Прибыль\r\nfrom СтрокаЗаказа строка left" +
+            " join Продукт on строка.Продукт_m0 = Продукт.primaryKey\r\nwhere строка.Продукт_m0" +
+            "=StormMainObjectKey\r\ngroup by строка.Продукт_m0")]
+        public virtual double МаксПрибыль
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Продукт.МаксПрибыль Get)
+                return 0;
+                // *** End programmer edit section *** (Продукт.МаксПрибыль Get)
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Продукт.МаксПрибыль Set)
+
+                // *** End programmer edit section *** (Продукт.МаксПрибыль Set)
+            }
+        }
+        
+        /// <summary>
+        /// МаксВыпуск.
+        /// </summary>
+        // *** Start programmer edit section *** (Продукт.МаксВыпуск CustomAttributes)
+
+        // *** End programmer edit section *** (Продукт.МаксВыпуск CustomAttributes)
+        [ICSSoft.STORMNET.NotStored()]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), "select max(everyday.summa) maximum\r\nfrom\r\n(select Продукт, ДатаИзг, sum(прод.Выпу" +
+            "щено) summa\r\nfrom ГотовыйПродукт прод\r\ngroup by прод.Продукт, прод.ДатаИзг) as e" +
+            "veryday\r\nwhere everyday.Продукт = StormMainObjectKey\r\ngroup by everyday.Продукт")]
+        public virtual double МаксВыпуск
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Продукт.МаксВыпуск Get)
+                return 0;
+                // *** End programmer edit section *** (Продукт.МаксВыпуск Get)
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Продукт.МаксВыпуск Set)
+
+                // *** End programmer edit section *** (Продукт.МаксВыпуск Set)
+            }
+        }
+        
+        /// <summary>
         /// Class views container.
         /// </summary>
         public class Views
@@ -316,6 +374,17 @@ namespace IIS.АСУ_Кондитерская
                 get
                 {
                     return ICSSoft.STORMNET.Information.GetView("ПродуктL", typeof(IIS.АСУ_Кондитерская.Продукт));
+                }
+            }
+            
+            /// <summary>
+            /// "ПродуктОтчет" view.
+            /// </summary>
+            public static ICSSoft.STORMNET.View ПродуктОтчет
+            {
+                get
+                {
+                    return ICSSoft.STORMNET.Information.GetView("ПродуктОтчет", typeof(IIS.АСУ_Кондитерская.Продукт));
                 }
             }
         }

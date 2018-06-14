@@ -60,13 +60,20 @@ namespace IIS.АСУ_Кондитерская
 
                 // Для продавца устанавливаем по умолчанию торговую точку, на которой он работает
                 this.DataObject = shop;
+
+                foreach(ПродуктНаПродажу prod in DataObject.ПродуктНаПродажу)
+                {
+                    if (prod.ДатаУничтожения != null || prod.Осталось==0)
+                    {
+                        DataObject.ПродуктНаПродажу.RemoveByKey(prod.__PrimaryKey);
+                        prod.SetStatus(ObjectStatus.UnAltered);
+                    }
+                }
             }
-            //var dvd = new DetailVariableDef(ld.GetObjectType("Details"), "ПродуктНаПродажу", ПродуктНаПродажу.Views.ПродуктНаПродажуE, "ТорговаяТочка", null);
-            /*Function lf = ld.GetFunction(ld.funcIsNull,new VariableDef(ld.DateTimeType, Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.ДатаУничтожения)));
-            ctrlПродуктНаПродажу.AddLookUpSettings(Information.ExtractPropertyPath<ПродуктНаПродажу>(p => p.ДатаУничтожения), new ICSSoft.STORMNET.Web.Tools.WGEFeatures.LookUpSetting
-            {
-                LimitFunction = lf
-            });*/
+            ctrlПродуктНаПродажу.ColSortDef = new ColumnsSortDef[] {
+                new ColumnsSortDef("Продукт.Наименование", SortOrder.Asc),
+                new ColumnsSortDef("ДатаИзг", SortOrder.Desc)
+            };
         }
 
         /// <summary>

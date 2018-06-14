@@ -304,7 +304,6 @@
   <ItemGroup>
     <Content Include="App_Themes\BlueSky\Pages\MainPage\Images\app-logo.png" />
     <Content Include="forms\Reports\MaxProfit.aspx" />
-    <Content Include="forms\Reports\ShopPower.aspx" />
     <Content Include="forms\TorgovayaTochka\TorgovayaTochkaL.aspx" />
     <Compile Include="forms\Reports\MaxProfit.aspx.cs">
       <DependentUpon>MaxProfit.aspx</DependentUpon>
@@ -312,13 +311,6 @@
     </Compile>
     <Compile Include="forms\Reports\MaxProfit.aspx.designer.cs">
       <DependentUpon>MaxProfit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="forms\Reports\ShopPower.aspx.cs">
-      <DependentUpon>ShopPower.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="forms\Reports\ShopPower.aspx.designer.cs">
-      <DependentUpon>ShopPower.aspx</DependentUpon>
     </Compile>
     <Compile Include="forms\TorgovayaTochka\TorgovayaTochkaL.aspx.cs">
       <DependentUpon>TorgovayaTochkaL.aspx</DependentUpon>

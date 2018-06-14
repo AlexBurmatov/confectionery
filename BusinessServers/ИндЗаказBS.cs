@@ -137,7 +137,7 @@ namespace IIS.АСУ_Кондитерская
                             {
                                 ДатаИзг = ((ГотовыйПродукт)complete_products[i]).ДатаИзг,
                                 Поступило = sklad_count,
-                                Осталось = req_count,
+                                Осталось = sklad_count,
                                 ТорговаяТочка = UpdatedObject.ТорговаяТочка,
                                 Продукт = ((СтрокаЗаказа)point).Продукт
                             };

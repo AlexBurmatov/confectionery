@@ -63,6 +63,10 @@ namespace IIS.АСУ_Кондитерская
                     new VariableDef(ld.StringType, Information.ExtractPropertyPath<Продукт>(r => r.Статус)), "В продаже"),
                 ColumnsSort = new ColumnsSortDef[] { new ColumnsSortDef("Код", SortOrder.Asc) }
             });
+            if (DataObject.Состояние == СостояниеЗаказа.Оплаченный)
+            {
+                ctrlСостояние.Enabled = false;
+            }
         }
 
         /// <summary>

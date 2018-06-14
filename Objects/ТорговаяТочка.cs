@@ -61,7 +61,7 @@ namespace IIS.АСУ_Кондитерская
         private IIS.АСУ_Кондитерская.DetailArrayOfПродуктНаПродажу fПродуктНаПродажу;
         
         // *** Start programmer edit section *** (ТорговаяТочка CustomMembers)
-        private double? koeff = null;
+        private double koeff;
         // *** End programmer edit section *** (ТорговаяТочка CustomMembers)
 
         
@@ -145,12 +145,11 @@ WHERE прод.ТорговаяТочка = StormMainObjectKey ) as поступ
 (SELECT sum(прод.Осталось) num
 FROM ПродуктНаПродажу прод LEFT JOIN ТорговаяТочка точка ON прод.ТорговаяТочка=точка.primaryKey
 WHERE прод.ТорговаяТочка = StormMainObjectKey  AND прод.ДатаУничтожения IS NOT NULL) as уничтожено")]
-        public virtual double? КоэффБезотх
+        public virtual double КоэффБезотх
         {
             get
             {
                 // *** Start programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
-                
                 return koeff;
                 // *** End programmer edit section *** (ТорговаяТочка.КоэффБезотх Get)
             }

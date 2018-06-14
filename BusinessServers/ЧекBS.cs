@@ -146,9 +146,12 @@ namespace IIS.АСУ_Кондитерская
                     }
                 }
                 // --------------------- ПРОДУКТЫ ОТПРАВЛЕНЫ В ТОРГОВУЮ ТОЧКУ -----------------                
-                ds.LoadObject(UpdatedObject.ИндивидуальныйЗаказ);
-                UpdatedObject.ИндивидуальныйЗаказ.Состояние = СостояниеЗаказа.Оплаченный;
-                ds.UpdateObject(UpdatedObject.ИндивидуальныйЗаказ);
+                if (UpdatedObject.ИндивидуальныйЗаказ != null)
+                {
+                    ds.LoadObject(UpdatedObject.ИндивидуальныйЗаказ);
+                    UpdatedObject.ИндивидуальныйЗаказ.Состояние = СостояниеЗаказа.Оплаченный;
+                    ds.UpdateObject(UpdatedObject.ИндивидуальныйЗаказ);
+                }
                 return forupdate.ToArray();
             }
             return new ICSSoft.STORMNET.DataObject[0];

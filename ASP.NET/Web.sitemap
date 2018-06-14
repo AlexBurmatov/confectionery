@@ -18,8 +18,7 @@
       <siteMapNode title="Данные" url="~/flexberry/AuditEntityByObjectsList/" />
     </siteMapNode>
     <siteMapNode title="Отчеты" roles="admin" xmlns="">
-      <siteMapNode title="Максимальная прибыль" description="" url="~/forms/Reports/MaxProfit.aspx" />
-      <siteMapNode title="Мощность цеха" description="" url="~/forms/Reports/ShopPower.aspx" />
+      <siteMapNode title="Прибыль и выпуск" description="" url="~/forms/Reports/MaxProfit.aspx" />
     </siteMapNode>
     <siteMapNode title="Сотрудники" roles="admin" xmlns="">
       <siteMapNode title="Продавец" description="" url="~/forms/Prodavec/ProdavecL.aspx" />
